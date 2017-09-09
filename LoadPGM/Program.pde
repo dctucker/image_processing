@@ -209,10 +209,15 @@ boolean updateChain(){
   return ret;
 }
 
+void settings(){
+  size(1100, 700);
+}
+
 void setup() {
+  
+
   font = createFont("Lucida Sans Unicode", 11);
   textFont(font, 12);
-  size(1100, 700);
   
 
   switch(assignment) {
@@ -321,7 +326,7 @@ void connectChain(ImageOp iop){
     chain[chain.length-1].copyPalette(chain[chain.length-1].in);
 }
 
-String CWD = "/Users/dctucker/Documents/UNCW/Grad/ Fall 08/520/LoadPGM/data/";
+String CWD = "/Users/casey/Development/image_processing/LoadPGM/data/";
 
 void ls(String path){
   //if(path.equals(""));

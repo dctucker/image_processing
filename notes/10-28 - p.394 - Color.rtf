@@ -1,0 +1,101 @@
+{\rtf1\ansi\ansicpg1252\cocoartf949\cocoasubrtf350
+{\fonttbl\f0\fnil\fcharset0 LucidaGrande;\f1\fnil\fcharset0 AppleSymbols;}
+{\colortbl;\red255\green255\blue255;\red218\green33\blue31;\red86\green182\blue47;\red18\green32\blue240;
+\red181\green38\blue191;\red85\green184\blue194;\red187\green174\blue52;\red187\green187\blue54;\red229\green132\blue132;
+}
+{\info
+{\author D. Casey Tucker}}\margl1440\margr1440\vieww12360\viewh15120\viewkind0
+\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\ql\qnatural\pardirnatural
+
+\f0\fs26 \cf0 Color Image Processing\
+	1. Color is a powerful descriptor that can simplify object identification and extraction.\
+	2. Humans can discern thousands of color gradations, but only two dozen gray levels\
+\
+	Visible color spectrum:\
+		6 major color regions\
+			violet, blue, green, yellow, orange, red\
+			450 nm ~ 700 nm\
+		A green car reflects green wavelengths (570 nm) and absorbs all others\
+\
+	Color (chromatic) light can be characterized by three properties\
+		Radiance (Watts)\
+			amount of energy from a light source\
+		Luminance (Lumens)\
+			amount of energy from a source perceived by an observer\
+		Brightness (no units)\
+			unquantifiable subjective descriptor\
+\
+	Cones are tied to individual nerve endings\
+	Groups of rods are tied to individual nerve endings	\
+		This means that cones provide finer detail than the rods\
+\
+	Cones are divide into 3 sensing categories\
+		red: 65%	\
+		blue: 2% - highly sensitive\
+		green: 33%\
+	\
+	Primary colors:\
+		\cf2 Red\cf0 , \cf3 Green\cf0 , \cf4 Blue\cf0 \
+	Secondary colors:\
+		\cf5 Magenta (R+B)\cf0 , \cf6 Cyan (G+B)\cf0 , \cf7 Yellow (R+G)\cf8 \
+	\cf0 \
+\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\ql\qnatural\pardirnatural
+
+\b \cf0 	HSI model:
+\b0 \
+		Hue - dominant wavelength\
+		Saturation - measure of amount of white\
+		Brightness - achromatic intensity\
+	\cf2 Pure red\cf0 \
+		hue = red, saturation = 100%, brightness = 100%\
+	\cf9 Pink\cf0 \
+		hue = red, saturation = 50%, brightness = 100%\
+	\
+	Chromaticity - hue combined with saturation\
+	Color - chromaticity and brightness\
+	Tristimulus values - X = red, Y = green, Z = blue\
+		x = X / X+Y+Z\
+		y = Y / X+Y+Z\
+		z = Z / X+Y+Z\
+		x + y + z = 1\
+	\
+	RGB color model:\
+		Hardware applications\
+	Pixel depth:\
+		number of bits to represent each pixel in the RGB space.\
+		True color (full color): 24-bits, 8 bits for each color channel\
+			16,777,216 possible colors\
+	CMYK color model:\
+		Used for printing: subtractive process\
+		[ C M Y ] = [ 1 1 1 ] - [ R G B ]\
+	HSI color model: \
+		closer to human perception\
+		RGB to HSI\
+			H = 	\{ \uc0\u952 		| B \u8804  G\
+				\{ 360 - \uc0\u952 	| B > G\
+	\
+			\uc0\u952  = cos\u8315 \'b9	\{      0.5 (R-G) + (R-B) /\
+					\{  \uc0\u8730 [ (R-G)\'b2 + (R-B)(G-B) ]\
+			s = 1 - [ 3 * min(R,G,B) / (R+G+B) ]\
+			I = (1/3)(R+G+B)\
+\cf2 \
+	\cf0 Full-color Image processing: two camps\
+		1. Process each component-image individually and then form composite image\
+		2. Deal with color pixel directly\
+			c(x,y) =	[ c_r(x,y) ]		[ R(x,y) ]\
+					[ c_g(x,y) ]	=	[ G(x,y) ]\
+					[ c_b(x,y) ]		[ B(x,y) ]\
+		Histogram\
+			1. Deal with separately\
+			2. Work in HSI space on Intensity histogram\
+		Color smoothing\
+			1. c\uc0\u773 (x,y) =	[ (1/k) \u8721  R(s,t)\
+					[ (1/k) \uc0\u8721  G(s,t)\
+					[ (1/k) \uc0\u8721  B(s,t)\
+\pard\tx720\tx1440\tx2160\tx2880\tx3600\tqc\tx4380\tx4580\tx5760\tx6480\tx7200\tx7920\tx8640\ql\qnatural\pardirnatural
+\cf0 			2. c\uc0\u773 (x,y) = (1/k)	\u8721 	c(s,t)\
+
+\fs20 						s,t 
+\f1 \uc0\u8712  
+\f0 Sxy\
+}

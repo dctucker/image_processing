@@ -45,7 +45,7 @@ class ImgOpEdgeLocal extends ImgOpSobel {
     drawBox();
     fill(#cccccc);
     textAlign(LEFT);
-    text("0: M(x,y)\n1: "+((char)0x03B1)+"(x,y)\n2: ¶x\n3: ¶y", posLeft+5, height - posTop + 20);
+    text("0: M(x,y)\n1: \u03b1(x,y)\n2: \u2202x\n3: \u2202y", posLeft+5, height - posTop + 20);
   }
 
 }
@@ -83,7 +83,7 @@ class ImgOpAThresh extends ImageOp {
   public void display(){
     drawBox();
     textAlign(LEFT);
-    text( "" + (char)(0x3B1) + (char)(0x00B1)+" "+threshA+
+    text( "\u03b1 "+threshA+
           "\nM > "+threshM ,
           posLeft + 5, height - posTop + 20 );
   }

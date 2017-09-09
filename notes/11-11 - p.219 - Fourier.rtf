@@ -1,0 +1,215 @@
+{\rtf1\ansi\ansicpg1252\cocoartf949\cocoasubrtf350
+{\fonttbl\f0\fnil\fcharset0 LucidaGrande;\f1\fnil\fcharset0 ArialUnicodeMS;}
+{\colortbl;\red255\green255\blue255;}
+{\info
+{\author D. Casey Tucker}}\margl1440\margr1440\vieww12400\viewh14120\viewkind0
+\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\ql\qnatural\pardirnatural
+
+\f0\fs26 \cf0 \uc0\u102 \u771 (t) = f(t)s_\u8710 T(t) = \u8721 [\u8734 ]f(t) \u948 (t-n\u8710 T)\
+f_k = \uc0\u8747 [\u8734 ] f(t) \u948 (t-k\u8710 T)dt = f(k\u8710 T)\
+\
+FT of sample function\
+	\uc0\u70 \u771 (u) = 
+\f1 \uc0\u8497 
+\f0 \{\uc0\u102 \u771 (t)\} = 
+\f1 \uc0\u8497 
+\f0 \{f(t) s_\uc0\u8710 T(t)\}\
+	= F(u) * S(u) | convolution\
+		f(t)h(t) <=> F(u) * H(u)\
+		f(t)*h(t) <=> F(u) H(u)\
+\pard\tx720\tx1440\tx2160\tqc\tx2660\tx2940\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\ql\qnatural\pardirnatural
+
+\fs20 \cf0 				\uc0\u8734 \
+
+\fs26 	S(u) = (1/\uc0\u8710 T)	\u8721 	\u948 ( u - (n/\u8710 T) )\
+
+\fs20 				-\uc0\u8734 \
+\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\ql\qnatural\pardirnatural
+
+\fs26 \cf0 	\uc0\u70 \u771 (u) = F(u) * S(u)\
+\
+\pard\tx720\tqc\tx1660\tx1960\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\ql\qnatural\pardirnatural
+
+\fs20 \cf0 		\uc0\u8734 \
+
+\fs26 	\uc0\u70 \u771 (u) =	\u8747 	F(\u964 ) S(u-\u964 ) d\u964 \
+
+\fs20 		-\uc0\u8734 \
+\
+\pard\tx720\tx1440\tqc\tx1840\tx2140\tqc\tx3780\tx4080\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\ql\qnatural\pardirnatural
+\cf0 			\uc0\u8734 		\u8734 \
+
+\fs26 		=	\uc0\u8747 	F(\u964 ) (1/\u8710 T)	\u8721 	\u948 (u-(n/\u8710 T) - \u964 )\
+
+\fs20 			-\uc0\u8734 		n=-\u8734 \
+\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\ql\qnatural\pardirnatural
+
+\fs26 \cf0 \
+\pard\tx720\tx1440\tx2160\tqc\tx2900\tqc\tx3520\tx3840\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\ql\qnatural\pardirnatural
+
+\fs20 \cf0 				\uc0\u8734 	\u8734 \
+
+\fs26 		= (1/\uc0\u8710 T)	\u8721 	\u8747 	F(\u964 ) \u948 (u-(n/\u8710 T)-\u964 ) d\u964 \
+
+\fs20 				n=-\uc0\u8734 	-\u8734 \
+\pard\tx720\tx1440\tx2160\tqc\tx2760\tqc\tx3400\tx3640\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\ql\qnatural\pardirnatural
+\cf0 				\uc0\u8734 	\u8734 \
+
+\fs26 		= (1/\uc0\u8710 T)	\u8721 	\u8747 	F(\u964 ) \u948 (\u964  - (u-(n/\u8710 T) ) ) d\u964 \
+
+\fs20 				n=-\uc0\u8734 	-\u8734 \
+\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\ql\qnatural\pardirnatural
+
+\fs26 \cf0 \
+\pard\tx720\tx1440\tx2160\tqc\tx2860\tx3240\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\ql\qnatural\pardirnatural
+
+\fs20 \cf0 				\uc0\u8734 \
+
+\fs26 	\uc0\u70 \u771 (u)	= (1/\u8710 T)	\u8721 	F( u - (n/\u8710 T) )\
+
+\fs20 				n=-\uc0\u8734 \
+\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\ql\qnatural\pardirnatural
+
+\fs26 \cf0 \
+FT of a sample function \uc0\u102 \u771 (t), \u70 \u771 (u) is an infinite periodic sequence of copies of F(u).\
+	F(u) = f(t)	Copies are separated by \uc0\u8710 T. F(u) is band-limited.\
+	No values outside of [ - u_max , u_max ]\
+\
+\pard\tqc\tx940\tx1240\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\ql\qnatural\pardirnatural
+
+\fs20 \cf0 	\uc0\u8734 \
+
+\fs26 f(t) =	\uc0\u8747 	F(u) exp(j2\u960 ut) du\
+
+\fs20 	-\uc0\u8734 \
+\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\ql\qnatural\pardirnatural
+
+\fs26 \cf0 \
+Aliasing occurs when the spacing of the band-limited F(u) is not spaced far enough apart.\
+Nyquist rate\
+	1/\uc0\u8710 T > 2 u_max\
+\
+Anti-aliasing\
+	1. Smooth image\
+	2. Take into Fourier domain\
+\
+DFT\
+\pard\tx720\tx1440\tqc\tx1680\tx1920\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\ql\qnatural\pardirnatural
+
+\fs20 \cf0 			\uc0\u8734 \
+
+\fs26 	\uc0\u70 \u771 (u) =	\u8747 	\u102 \u771 (t) exp(-j2\u960 ut) dt\
+
+\fs20 			-\uc0\u8734 
+\fs26 \
+\pard\tx720\tqc\tx1600\tx1940\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\ql\qnatural\pardirnatural
+
+\fs20 \cf0 \
+		\uc0\u8734 \
+
+\fs26 	\uc0\u102 \u771 (t) =	\u8721 	f(t) \u948 (t - n\u8710 T)\
+
+\fs20 		n=-\uc0\u8734 
+\fs26 \
+\pard\tx720\tx1440\tqc\tx1820\tqc\tx2360\tx2660\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\ql\qnatural\pardirnatural
+
+\fs20 \cf0 \
+			\uc0\u8734 	\u8734 \
+
+\fs26 		=	\uc0\u8747 	\u8721 	f(t) \u948 (t - n\u8710 T) exp(-j2\u960 ut) dt\
+
+\fs20 			-\uc0\u8734 	n=-\u8734 \
+\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\ql\qnatural\pardirnatural
+\cf0 \
+\pard\tx720\tx1440\tqc\tx1840\tqc\tx2380\tx2640\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\ql\qnatural\pardirnatural
+\cf0 			\uc0\u8734 	\u8734 \
+
+\fs26 		=	\uc0\u8721 	\u8747 	f(t) \u948 (t - n\u8710 T) exp(-j2\u960 ut) dt\
+
+\fs20 			n=-\uc0\u8734 	-\u8734 \
+\pard\tx720\tx1440\tqc\tx1900\tx2240\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\ql\qnatural\pardirnatural
+\cf0 			\uc0\u8734 \
+
+\fs26 		=	\uc0\u8721 	f(n\u8710 T) exp(-j2\u960 un\u8710 T)\
+
+\fs20 			n=-\uc0\u8734 \
+\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\ql\qnatural\pardirnatural
+
+\fs26 \cf0 \
+\pard\tx720\tx1440\tqc\tx1720\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\ql\qnatural\pardirnatural
+
+\fs20 \cf0 			\uc0\u8734 \
+
+\fs26 	DFT =	\uc0\u8721 \
+
+\fs20 			n=-\uc0\u8734 \
+\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\ql\qnatural\pardirnatural
+
+\fs26 \cf0 \
+	m u = 0 to u = 1/\uc0\u8710 T\
+	u = m / M\uc0\u8710 T | m=0,1,2,..M-1\
+\
+\pard\tx720\tx1440\tqc\tx2080\tx2380\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\ql\qnatural\pardirnatural
+
+\fs18 \cf0 			M-1\
+
+\fs26 	F_m(u) =	\uc0\u8721 	f_n exp(-j2\u960 mn/M)\
+
+\fs20 			m=0\
+\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\ql\qnatural\pardirnatural
+
+\fs26 \cf0 \
+\pard\tx720\tx1440\tqc\tx1820\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\ql\qnatural\pardirnatural
+
+\fs20 \cf0 			M-1\
+
+\fs26 DFT	F(u) =	\uc0\u8721 	f(x) exp(-j2\u960 ux/M)\
+
+\fs20 			x=0\
+\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\ql\qnatural\pardirnatural
+\cf0 \
+\pard\tx720\tx1440\tqc\tx2500\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\ql\qnatural\pardirnatural
+\cf0 			M-1\
+
+\fs26 IDFT	f(x) = (1/M)	\uc0\u8721 	F(u) exp(j2\u960 ux/M) | u = 0,1,...,M-1\
+
+\fs20 			u=0
+\fs26 \
+\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\ql\qnatural\pardirnatural
+
+\fs20 \cf0 \
+\pard\tx720\tx1440\tqc\tx1680\tx2060\tx2880\tx3600\tx4320\tqc\tx4920\tx5220\tx6480\tx7200\tx7920\tx8640\ql\qnatural\pardirnatural
+\cf0 			M-1\
+
+\fs26 	F(u) =	\uc0\u8721 	f(x) exp(-j2\u960 ux/M)\
+
+\fs20 			x=0\
+
+\fs26 \
+
+\fs20 			3					3\
+
+\fs26 	F(0) =	\uc0\u8721 	f(x) exp(-2j\u960 0x/4) =	\u8721 	f(x) = f(0) + f(1) + f(2) + f(3)\
+
+\fs20 			x=0					x=0\
+
+\fs26 \
+
+\fs20 			3					3\
+
+\fs26 	F(1) =	\uc0\u8721 	f(x) exp(-j2\u960 1x/4) =	\u8721 	f(x) exp(-jx\u960 /2)\
+
+\fs20 			x=0					x=0\
+\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\ql\qnatural\pardirnatural
+
+\fs26 \cf0 \
+		= f(0) + f(1) exp(-j\uc0\u960 /2) + f(2) exp(-j\u960 ) + f(3) exp(-j3\u960 /2)\
+		= 1 + 2(0-j) + 4(-1-0j) + 4(0+j)\
+		= -3 + 2j\
+\
+\
+\
+\
+\
+\
+}

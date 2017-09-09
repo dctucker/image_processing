@@ -1,0 +1,85 @@
+{\rtf1\ansi\ansicpg1252\cocoartf949\cocoasubrtf350
+{\fonttbl\f0\fnil\fcharset0 LucidaGrande;}
+{\colortbl;\red255\green255\blue255;}
+{\info
+{\author D. Casey Tucker}}\margl1440\margr1440\vieww11960\viewh9600\viewkind0
+\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\ql\qnatural\pardirnatural
+
+\f0\fs26 \cf0 Laplacian filter - partial second derivative\
+	isotropic = rotation invariant\
+	isotropic at 90\uc0\u8304 \
+		0	1	0\
+		1	-4	1\
+		0	1	0\
+	isotropic at 45\uc0\u8304 \
+		1	1	1\
+		1	-8	1\
+		1	1	1\
+\
+Unsharp masking\
+	1. Blur the image\
+		averaging kernel\
+	2. Subtract the blurred image from the original to create a mask\
+	3. Add the mask to the original image\
+		\
+	f = original image\
+	f_blur = blurred image\
+	k > 0\
+		k = 1 \uc0\u8594  unsharp masking\
+		k \uc0\u8805  2 \u8594  highboost filtering\
+	g_mask(x,y) = f(x,y) - f_blur(x,y)\
+	g(x,y) = f(x,y) + k * g_mask(x,y)\
+	\
+Highboost filtering\
+\
+Spatial gradient boosting\
+\
+Gradient Image Sharpening\
+	f(x,y) = image\
+	\uc0\u8711 f = grad(f) = \
+		[ g_x ] = 	[\uc0\u8706 f/\u8706 x]\
+		[ g_y ] = 	[\uc0\u8706 f/\u8706 y]\
+	mag  M(x,y) = mag(\uc0\u8711 f) = \u8730 ( g_x\'b2 + g_y\'b2 ) \u8776  |g_x| + |g_y|\
+\
+	Given a 3x3 template, we can determine the mag (\uc0\u8711 f) in a discrete approximation\
+			y-1	 y	y+1\
+\
+	x-1		 
+\b z\uc0\u8321 	 z\u8322 	 z\u8323 
+\b0 \
+	  x		 
+\b z\uc0\u8324 	 z\u8325 	 z\u8326 
+\b0 \
+	x+1		 
+\b z\uc0\u8327 	 z\u8328 	 z\u8329 
+\b0 \
+\
+	\uc0\u8706 f/\u8706 x = g_x = f(x+1,y) - f(x,y) = z\u8328  - z\u8325 \
+	\uc0\u8706 f/\u8706 y = g_y = f(x,y+1) - f(x,y) = z\u8326  - z\u8325 \
+	masks	x				y\
+				-1	0			-1	1\
+				1	0			0	0\
+\
+\
+Roberts Cross gradient operator\
+	g_x = z\uc0\u8329  - z\u8325 \
+				1	0\
+				0	-1\
+	g_y = z\uc0\u8328  - z\u8326 \
+				0	-1\
+				1	0\
+Sobel mask\
+	\uc0\u8706 f/\u8706 x = g_x = z\u8327  - z\u8321  + z\u8328  - z\u8322  + z\u8329  - z\u8323  = (z\u8327  + 2z\u8328  + z\u8329 ) - (z\u8321  + 2z\u8322  + z\u8323 )\
+	\uc0\u8706 f/\u8706 y = g_y = (z\u8323  + 2z\u8326  + z\u8329 ) - (z\u8321  + 2z\u8324  + z\u8327 )\
+		-1	-2	-1			-1	0	1\
+		0	0	0			-2	0	2\
+		1	2	1			-1	0	1\
+\
+Magnitude image\
+	| \uc0\u8711 f | \u8776  |g_x| + |g_y| \u8776 	| (z\u8327  + 2z\u8328  + z\u8329 ) - (z\u8321  + 2z\u8322  + z\u8323 ) | +\
+						| (z\uc0\u8323  + 2z\u8326  + z\u8329 ) - (z\u8321  + 2z\u8324  + z\u8327 ) |\
+	\
+Program: \
+	algorithm that brings out wrinkles in a face in the best way possible\
+	don't rescale after each operation. rescale after all operations are done\
+}

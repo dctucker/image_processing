@@ -1,0 +1,169 @@
+{\rtf1\ansi\ansicpg1252\cocoartf949\cocoasubrtf350
+{\fonttbl\f0\fnil\fcharset0 LucidaGrande;\f1\fnil\fcharset0 AppleSymbols;}
+{\colortbl;\red255\green255\blue255;}
+{\info
+{\author D. Casey Tucker}}\margl1440\margr1440\vieww12380\viewh15120\viewkind0
+\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\ql\qnatural\pardirnatural
+
+\f0\fs26 \cf0 Chapter 5, 6\
+Image Restoration and Reconstruction\
+\
+Restoration\
+	The goal is to improve and image in some predefined way\
+	The techniques use a priori knowledge of the degradation\
+	f(x,y) \uc0\u8594  Degradation function H \u8594  Noise \u951 (x,y) \u8594  Restoration filters \u8594  \u102 \u770 (x,y)\
+	Spatial domain\
+		g(x,y) = h(x,y) * f(x,y) + \uc0\u951 (x,y)\
+	Frequency domain\
+		G(u,v) = H(u,v) F(u,v) + N(u,v)\
+	Assume h(x,y) - identify function\
+		g(x,y) = f(x,y) + \uc0\u951 (x,y)\
+	\
+	Principal sources of noise\
+		Acquisition - quality of sensor / environment\
+		Transmission\
+	Assumptions\
+		1. Noise is independent of spatial coordinates\
+		2. Uncorrelated w/ pixel intensity\
+\
+Noise PDFs\
+	Gaussian\
+		Most common\
+		p(z) = 1 / G\uc0\u8730 (2\u960 ) exp( - ( z - z\u773  )\'b2 / 2\u963 \'b2 )\
+		70% of value: [ z\uc0\u773  - \u963 , z\u773  + \u963  ]\
+		95% of value: [ z\uc0\u773  - 2\u963 , z\u773  + 2\u963  ]\
+ \
+	Rayleigh Noise\
+		p(z) =	\{ (2/b) (z-a) exp(-(z-a)\'b2/b)	| z\uc0\u8805 a\
+				\{ 0					| z < a\
+\
+		z\uc0\u773  = a + \u8730 (\u960 b/4), \u963 \'b2 = b(4-\u960 )/4\
+		right-skewed histograms\
+	Gamma noise\
+		p(z) =	\{ [ a^b * z^(b-1) / (b-1)! ] exp(-az)	| z \uc0\u8805  0\
+				\{ 0 							| z < 0\
+		a > 0, b = positive integer\
+		z\uc0\u773  = b / a, \u963  = b/a\'b2\
+	Exponential\
+		p(z) = 	\{ a*exp(-az)	| z \uc0\u8805  0\
+				\{ 0 			| z < 0\
+		a > 0, z\uc0\u773  = 1/a, \u963 \'b2 = 1/a\'b2\
+	Uniform\
+		p(z) = 	\{ 1/(b-a)	| a\uc0\u8804 z\u8804 b\
+				\{ 0		| otherwise\
+		z\uc0\u773  = (a+b)/2, \u963 \'b2 = (b-a)\'b2/12\
+	Impulse (salt-and-pepper)\
+		p(z) =	\{ Pa	| z=a\
+				\{ Pb	| z=b\
+				\{ 0	| otherwise\
+		if b>a, intensity b will appear as a light dot in the image and will be a dark dot		8-bit: a=0, b=255\
+\
+Parameters of the noise through experimentation\
+	Capture a set of images from the sensor in a controlled manner\
+		a gray BG, good illumination\
+		Use a section of the image Sxy of constant mid-level intensities\
+	Normalized histogram\
+		Sxy is size of section\
+		p_s(z_i) = n_n_i / Sxy\
+\pard\tx720\tx1440\tqc\tx2060\tx2340\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\ql\qnatural\pardirnatural
+
+\fs20 \cf0 			L-1\
+
+\fs26 		z\uc0\u773  =	\u8721 	z_i * p_s(z_i)\
+
+\fs20 			i=0\
+\
+			L-1\
+
+\fs26 		\uc0\u963 \'b2 =	\u8721 	(z_i - z\u773 )\'b2 p_z(z_i)\
+
+\fs20 			i=0\
+\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\ql\qnatural\pardirnatural
+
+\fs26 \cf0 		if not Gaussian distribution, use z\uc0\u773  & \u963 \'b2 to calculate a & b\
+\
+Arithmetic mean\
+	(s,t) = neighborhood\
+\pard\tx720\tx1440\tx2160\tqc\tx2860\tx3140\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\ql\qnatural\pardirnatural
+\cf0 	\uc0\u102 \u770 (x,y) = (1/MN)	\u8721 	g(s,t)\
+
+\fs20 				(s,t) 
+\f1 \uc0\u8712 
+\f0  Sxy\
+\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\ql\qnatural\pardirnatural
+
+\fs26 \cf0 	spatial filter = mxn with coefficients equal to 1/mn, e.g. 3x3\
+		1/9	1/9	1/9\
+		1/9	1/9	1/9\
+		1/9	1/9	1/9\
+\
+Geometric mean\
+\pard\tx720\tx1440\tqc\tx2000\tx2380\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\ql\qnatural\pardirnatural
+\cf0 	\uc0\u102 \u770 (x,y) = [	\u8719 	g(s,t) ] ^ 1/mn\
+
+\fs20 			(x,t) 
+\f1 \uc0\u8712  
+\f0 Sxy\
+\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\ql\qnatural\pardirnatural
+
+\fs26 \cf0 	e.g. 2x2\
+		10	10	\uc0\u8594 	10 * 10 * 20 * 20 ^ (1/4)\
+		20	20\
+\
+Median\
+\pard\tx720\tx1440\tqc\tx2240\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\ql\qnatural\pardirnatural
+\cf0 	\uc0\u102 \u770 (x,y) =	median	g(s,t)\
+
+\fs20 			(s,t) 
+\f1 \uc0\u8712  
+\f0 Sxy\
+\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\ql\qnatural\pardirnatural
+
+\fs26 \cf0 Max\
+\pard\tx720\tx1440\tqc\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\ql\qnatural\pardirnatural
+\cf0 	\uc0\u102 \u770 (x,y) =	max	g(s,t)\
+
+\fs20 			(s,t) 
+\f1 \uc0\u8712  
+\f0 Sxy\
+\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\ql\qnatural\pardirnatural
+
+\fs26 \cf0 Min\
+\pard\tx720\tx1440\tqc\tx2200\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\ql\qnatural\pardirnatural
+\cf0 	\uc0\u102 \u770 (x,y) =	min	g(s,t)\
+
+\fs20 			(s,t)
+\f1 \uc0\u8712 
+\f0 Sxy\
+\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\ql\qnatural\pardirnatural
+
+\fs26 \cf0 \
+	12	33	35	22	50\
+	14	100	50	25	40\
+	16	55	59	28	30\
+	16	55	59	27	31\
+	20	20	20	20	20\
+\
+	Min/max are useful for bipolar noise\
+\
+Alpha-trimmed mean (p.327)\
+	Delete d/2 lowest and highest intensity values\
+	Then, compute the average on what's left over\
+\pard\tx720\tx1440\tx2160\tx2880\tqc\tx3400\tx3820\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\ql\qnatural\pardirnatural
+\cf0 	\uc0\u102 \u770 (x,y) = (1/(mn-d))	\u8721 	g_r(x,y)\
+
+\fs20 					(s,t) 
+\f1 \uc0\u8712  
+\f0 Sxy\
+\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\ql\qnatural\pardirnatural
+
+\fs26 \cf0 	d = (0, mn-1)\
+	g_r(s,t) = ordered statistics after removal\
+	e.g. d=4\
+		remove bottom 2 and top 2 after ordering\
+		remove 12, 14, 59, 100\
+		compute average on remaining\
+		16+33+35+50+55 / 5 
+\f1 \uc0\u8771 
+\f0  38  \
+}

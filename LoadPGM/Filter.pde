@@ -229,8 +229,8 @@ public class ImgOpSobel extends ImgOpFilter2 {
     drawFilter(zx,  40);
     drawFilter(zy, 110);
     textAlign(CENTER);
-    text("¶/¶x", posLeft + posWidth / 2, height - posHeight + 20);
-    text("¶/¶y", posLeft + posWidth / 2, height - posHeight + 90);
+    text("\u2202/\u2202x", posLeft + posWidth / 2, height - posHeight + 20);
+    text("\u2202/\u2202y", posLeft + posWidth / 2, height - posHeight + 90);
   }  
 }
 
@@ -295,7 +295,7 @@ class ImgOpGMean extends ImgOp5x5 {
   }
   public void display(){
     drawBox();
-    drawOperator("¸");
+    drawOperator("\u220f");
     textAlign(CENTER);
     textSize(11);
 
@@ -304,12 +304,12 @@ class ImgOpGMean extends ImgOp5x5 {
     text("mn", posLeft + posWidth / 4, height - posTop / 2 - 12);
     
     textSize(32);
-    text(""+((char)0x23B7) , posLeft + posWidth / 3, height - posTop / 2 + 2);
+    text("\u23b7" , posLeft + posWidth / 3, height - posTop / 2 + 2);
 
     
     textSize(8);
     text("r", posLeft + 3 * posWidth / 4 - 5, height - posTop / 2 + 2);
-    text("s,t"+((char)0x2208)+"S", posLeft + posWidth / 2, height - posTop / 2 + 10);
+    text("s,t\u2208"+"S", posLeft + posWidth / 2, height - posTop / 2 + 10);
     textSize(7);
     text("xy", 16 + posLeft + posWidth/2, height - posTop / 2 + 12);    
 
@@ -320,7 +320,7 @@ class ImgOpAMean extends ImgOp5x5 {
   int d;
   ImgOpAMean(ImgData img){
     super(img);
-    title = ""+ ((char) 0x03B1)+"trimMean";
+    title = "\u2211\u03b1"+"trimMean";
     d = 5;
   }
   public int calc(int x, int y, int ch){
@@ -333,7 +333,7 @@ class ImgOpAMean extends ImgOp5x5 {
   }
   public void display(){
     drawBox();
-    drawOperator("·");
+    drawOperator("\u2211");
     textAlign(CENTER);
     textSize(11);
     text("d="+d, posLeft + posWidth / 2, height - 20);
@@ -345,7 +345,7 @@ class ImgOpAMean extends ImgOp5x5 {
     
     textSize(8);
     text("r", posLeft + 3 * posWidth / 4 - 5, height - posTop / 2 + 2);
-    text("s,t"+((char)0x2208)+"S", posLeft + posWidth / 2, height - posTop / 2 + 10);
+    text("s,t\u2208"+"S", posLeft + posWidth / 2, height - posTop / 2 + 10);
     textSize(7);
     text("xy", 16 + posLeft + posWidth/2, height - posTop / 2 + 12);
   }
@@ -379,7 +379,7 @@ public class ImgOpLaplacian extends ImgOpFilter {
   public void display(){
     super.display();
     textAlign(CENTER);
-    text("" + (char)(0x2207) + "" + (char)(0x00B2), posLeft + posWidth / 2, height - posTop + 20);
+    text("\u2207\u00B2", posLeft + posWidth / 2, height - posTop + 20);
   }
   public void defaultFilter(){
     int[] r = new int[9];

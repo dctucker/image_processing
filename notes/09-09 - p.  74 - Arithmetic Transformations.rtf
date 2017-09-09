@@ -1,0 +1,169 @@
+{\rtf1\ansi\ansicpg1252\cocoartf949\cocoasubrtf350
+{\fonttbl\f0\fnil\fcharset0 LucidaSans;\f1\fnil\fcharset0 AppleSymbols;\f2\fnil\fcharset0 LucidaGrande;
+}
+{\colortbl;\red255\green255\blue255;}
+{\info
+{\author D. Casey Tucker}}\margl1440\margr1440\vieww11340\viewh15120\viewkind0
+\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\ql\qnatural\pardirnatural
+
+\f0\fs24 \cf0 Arithmetic operations\
+\
+	addition		s(x,y) = f(x,y) + g(x,y)\
+	subtraction		d(x,y) = f(x,y) - g(x,y)\
+	multiplication	p(x,y) = f(x,y) * g(x,y)\
+				g is the image mask 
+\f1 \uc0\u8712 
+\f0  \{0,1\}\
+	division		v(x,y) = f(x,y) \'f7 g(x,y)\
+	\
+	ROI = Region Of Interest\
+\
+Image integration = averaging many images to remove gaussian noise\
+	\
+	10	10	10		10	120	5		0	110	5\
+	120	120	120	-	10	120	5	=	110	0	115\
+	5	5	5		10	120	5		-5	115	0\
+\
+Logic operations\
+	Remove LSB: each pixel AND 11111110\
+\
+8-bit images\
+	range = [0,255]\
+Color images - three 8-bit channels\
+	range = [0,255], [0,255], [0,255]\
+Out of range values\
+	Clipping\
+		Values < min = min, values > max = max\
+		poor contrast, poor dynamic range\
+	Mapping\
+		gm = g - min(g)			shift image to zero\
+		gs = 255 [ gm / max(gm) ]	rescale image to fit range\
+\
+\
+	Contrast\
+		the difference between dark and light\
+	Dynamic range\
+		the number of gradations between lowest and highest values\
+\
+\
+Spatial operations\
+1. Single-pixel\
+	operates on intensity value of an individual pixel\
+	z = intensity value of original pixel, s = processed pixel\
+	s = t(z)\
+2. neighborhood\
+	Sxy = set centered on (x,y)\
+	g(x,y) 
+\f2 \uc0\u8594 
+\f0  based on operation defined Sxy\
+	Sxy 
+\f1 \uc0\u8712 
+\f0  MxN\
+	g(x,y) = 1/MN \uc0\u8721  f(r,c) | r,c 
+\f1 \uc0\u8712 
+\f0  Sxy\
+	f	0	1	2	3	4	g	0	1	2	3	4\
+	0						0\
+	1						1\
+	2	(	x,y	   )			2		O\
+	3						3\
+	4						4\
+		g
+\f2 \uc0\u8321 \u8322 
+\f0  = (f
+\f2 \uc0\u8320 \u8322 
+\f0  + f
+\f2 \uc0\u8321 \u8322 
+\f0  + f
+\f2 \uc0\u8321 \u8323 
+\f0 ) / 3\
+\
+	borders can be padded with zero values,\
+		copied from existing elements,\
+		or just ignored\
+\
+	averaging is a lowpass filter\
+3. geometric spatial transforms or rubber sheet transforms\
+	1. spatial transform of coordinates\
+		(x,y) = transform coordinates; (v,w) = original coordinates\
+		(x,y) = T\{(v,w)\}\
+		(x,y) = T\{(v,w)\} = (v/2, w/2)\
+		0	1	2	3		0	2\
+		4	5	6	7	
+\f2 \uc0\u8594 
+\f0 		\
+		8	9	10	11		8	10\
+		12	13	14	15	\
+	2. intensity interpolation\
+		nearest neighbor\
+		linear\
+		bilinear\
+		bicubic\
+\
+Affine transformations (p. 88)\
+	[ x y 1] = [ v w 1] T\
+	T = identity\
+		1	0	0\
+		0	1	0\
+		0	0	1\
+	T = scaling\
+		cx	0	0\
+		0	cy	0\
+		0	0	1\
+	T = rotation\
+		cos
+\f2 \uc0\u952 
+\f0 	sin
+\f2 \uc0\u952 
+\f0 	0\
+		-sin
+\f2 \uc0\u952 
+\f0 	cos
+\f2 \uc0\u952 
+\f0 	0\
+		0	0	1\
+	T = translation\
+		1	0	0\
+		0	1	0\
+		tx	ty	1\
+	T = shear vertical\
+		1	0	0\
+		sv	1	0\
+		0	0	1\
+	T = shear horizontal\
+		1	sh	0\
+		0	1	0\
+		0	0	1\
+	Rotation and translation\
+	1	0	0	cos
+\f2 \uc0\u952 
+\f0 	sin
+\f2 \uc0\u952 
+\f0 	0		cos
+\f2 \uc0\u952 
+\f0 		sin
+\f2 \uc0\u952 
+\f0 		0\
+	0	1	0*	-sin
+\f2 \uc0\u952 
+\f0 	cos
+\f2 \uc0\u952 
+\f0 	0	=	-sin
+\f2 \uc0\u952 
+\f0 		cos
+\f2 \uc0\u952 
+\f0 		0\
+	tx	ty	1	0	0	1		txcos-tysin
+\f2 \uc0\u952 
+\f0 	txsin+tycos
+\f2 \uc0\u952 
+\f0 	1\
+\
+\
+PGM format\
+	magic number P2 = plain, P5 = raw\
+	# is a comment\
+	columns rows\
+	maxvalue\
+	data (0,maxvalue) separated by whitespace\
+}

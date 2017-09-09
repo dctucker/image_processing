@@ -1,0 +1,118 @@
+{\rtf1\ansi\ansicpg1252\cocoartf949\cocoasubrtf350
+{\fonttbl\f0\fnil\fcharset0 LucidaGrande;}
+{\colortbl;\red255\green255\blue255;}
+{\info
+{\author D. Casey Tucker}}\margl1440\margr1440\vieww12400\viewh13740\viewkind0
+\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\ql\qnatural\pardirnatural
+
+\f0\fs26 \cf0 2D into Fourier space and perform processing typically used for multiplications with some sort of filter, either low pass band pass notch high pass filter, then extract that back out.\
+In Fourier space, we only need one period from our continuous function. \
+\
+2D Impulse and shifting\
+	\uc0\u948 (t,z) =	\{ \u8734  	| if t=z=0\
+			\{ 0	| otherwise\
+\
+
+\fs20 	\uc0\u8734 \
+
+\fs26 	\uc0\u8747 \u8747 	\u948 (t,z) dt dz = 1\
+
+\fs20 	-\uc0\u8734 \
+\
+	\uc0\u8734 \
+
+\fs26 	\uc0\u8747 \u8747 	f(t,z) \u948 (t,z) dt dz = f(0,0)\
+
+\fs20 	-\uc0\u8734 \
+
+\fs26 \
+	\uc0\u8747 \u8747 	f(t,z) \u948 ( t - t\u8320  , z - z\u8320  ) dt dz = f(t\u8320 , z\u8320 )\
+\
+	Discrete\
+		\uc0\u948 (x,y) =	\{ 1	| if x=y=0\
+				\{ 0	| otherwise\
+\pard\tx720\tqc\tx1520\tqc\tx2260\tx2520\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\ql\qnatural\pardirnatural
+
+\fs20 \cf0 		\uc0\u8734 	\u8734 \
+
+\fs26 		\uc0\u8721 	\u8721 	f(x,y) \u948 ( x - x\u8320  , y - y\u8320  ) = f(x\u8320 ,y\u8320 )\
+
+\fs20 		x=-\uc0\u8734 	y=-\u8734 \
+\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\ql\qnatural\pardirnatural
+
+\fs26 \cf0 \
+	2D FT\
+\pard\tx720\tx1440\tx2160\tqc\tx2700\tx3120\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\ql\qnatural\pardirnatural
+
+\fs20 \cf0 				\uc0\u8734 \
+
+\fs26 		F(u,v)	= 	\uc0\u8747 \u8747 	f(t,z) exp(-j2\u960 mt) exp(-2\u960 vz) dt dz\
+
+\fs20 				-\uc0\u8734 \
+\
+				\uc0\u8734 \
+
+\fs26 			=	\uc0\u8747 \u8747 	f(t,z) exp(-j2\u960 (ut+vz)) dt dz\
+
+\fs20 				-\uc0\u8734 \
+\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\ql\qnatural\pardirnatural
+\cf0 \
+\pard\tx720\tx1440\tx2160\tqc\tx2660\tx3100\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\ql\qnatural\pardirnatural
+\cf0 				\uc0\u8734 \
+
+\fs26 		F(u,v) =	\uc0\u8747 \u8747 	f(t,z) exp(-j2\u960 (ut+vz)) dt dz\
+
+\fs20 				-\uc0\u8734 \
+\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\ql\qnatural\pardirnatural
+\cf0 \
+\pard\tx720\tx1440\tx2160\tqc\tx2660\tqc\tx3260\tx3720\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\ql\qnatural\pardirnatural
+\cf0 				T/2	Z/2\
+
+\fs26 			=	\uc0\u8747 	\u8747 	A exp(-j2\u960 (ut+vz)) dt dz\
+
+\fs20 				-T/2	-Z/2\
+\
+\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\ql\qnatural\pardirnatural
+
+\fs26 \cf0 			= A \uc0\u8747  exp(-j2\u960 ut) dt \u8747  exp(-j2\u960 vz)\
+\
+			= A [	(1/-j2\uc0\u960 m)  exp(-j2\u960 ut)	| [-T/2..T/2]\
+			  *	(1/-j2\uc0\u960 v)  exp(-j2\u960 vz)	| [-Z/2..Z/2]\
+\
+			= A [	( exp(-j2\uc0\u960 uT/2) - exp(-j2\u960 uT/2) ) / 2j\u960 u ] \
+			  * [	( exp(-j2\uc0\u960 vZ/2) + exp(-j2\u960 vZ/2) ) / 2j\u960 v\
+\
+			~ A [ exp(j\uc0\u960 uT) - exp(-j\u960 ut) / 2j\u960 u ]\
+	\
+			= A [ (1 / \uc0\u960 u) sin\u960 uT * (1/\u960 v) sin\u960 vZ\
+					sinc m = sin \uc0\u960 m / \u960 m\
+			\
+			= A [ (T / T\uc0\u960 u) sin\u960 uT * (Z/Z\u960 v) sin\u960 vZ\
+			= ATZ sinc uT sinc vZ\
+\
+	Impulse train\
+\pard\tx720\tx1440\tx2160\tx2880\tqc\tx3520\tqc\tx4260\tx4680\tx5760\tx6480\tx7200\tx7920\tx8640\ql\qnatural\pardirnatural
+
+\fs20 \cf0 					\uc0\u8734 	\u8734 \
+
+\fs26 		S_
+\fs20 \uc0\u8710 T\u8710 Z
+\fs26  (t,z) = 	\uc0\u8721 	\u8721 	\u948 ( t - m\u8710 T , z - n\u8710 Z )\
+
+\fs20 					m=-\uc0\u8734 	n=-\u8734 \
+\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\ql\qnatural\pardirnatural
+
+\fs26 \cf0 \
+		if some f(t,z) is continuous in time and band-limited\
+			(FT is zero outsize of [-u_max, u_max] and [-v_max, v_max])\
+			then the [signal|image] can be fully recovered\
+		\uc0\u8710 T < 1 / 2u_
+\fs20 max
+\fs26 , \uc0\u8710 Z < 1 / 2v_
+\fs20 max
+\fs26 \
+\
+	96x96 pixels\
+		Checkerboard\
+	\
+Effects of aliasing can be reduced by attenuating high frequencies}

@@ -1,0 +1,63 @@
+{\rtf1\ansi\ansicpg1252\cocoartf949\cocoasubrtf350
+{\fonttbl\f0\fnil\fcharset0 LucidaGrande;\f1\fnil\fcharset0 AppleSymbols;}
+{\colortbl;\red255\green255\blue255;}
+{\info
+{\author D. Casey Tucker}}\margl1440\margr1440\vieww11960\viewh9600\viewkind0
+\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\ql\qnatural\pardirnatural
+
+\f0\fs26 \cf0 Hough Transform\
+\
+A technique for finding parameterized geometric shapes given edge points.\
+\
+Given n edge-points found by an edge detection scheme, finds all lines that\
+	correspond to the edge points.\
+Brute force:\
+	n(n-1) / 2			n(n(n-1))/2	\
+		n\'b2				n\'b3		comparisons\
+\
+A line is defined as y = mx + b  \uc0\u8594   b = -xm + y\
+where mb plane\
+\
+Given points on an xy plane: x_i, y_i, x_j, y_j\
+The mb plane: b = -b_i m + y_i,  b = -x_j m + y_j\
+\
+Normal form of Hough transform\
+	\uc0\u961  = x cos \u952  + y sin \u952 \
+\
+	\uc0\u961  
+\f1 \uc0\u8712 
+\f0  (0, N\uc0\u8730 2), \u952  
+\f1 \uc0\u8712 
+\f0  (-90\'b0, 90\'b0)\
+\
+\uc0\u961 ,\u952  is quantized to \u8710 \u961 ,\u8710 \u952 \
+\
+\
+Algorithm\
+1. Define increments on \uc0\u961  and \u952  to quantize.\
+2. For every point of interest (point > threshold),\
+	plug in values for x,y into the normal line equation.\
+		\uc0\u961  = x cos \u952  + y sin \u952 \
+	every quantized value of \uc0\u952  solve for \u961 \
+3. For each \uc0\u961 ,\u952  pair in step 2, record the x,y pair in the quantized space\
+\
+x=y=0\
+for each x,y\
+	if I(x,y) > t\
+		set \uc0\u952 =-90\'b0\
+		solve \uc0\u961 =xcos\u952 +ysin\u952 \
+		store x,y in \uc0\u961 ,\u952  block\
+		\uc0\u952  += \u8710 \u952 \
+		if \uc0\u952  \u8805  90\'b0\
+			next I(x,y)\
+		else\
+			solve for next \uc0\u952 \
+\
+Form of circular: (x-x\uc0\u8320 ) + (y-y\u8320 ) = r\'b2\
+\
+\
+\
+generate a new accumulator matrix for each value of r whose indices are x and y\
+accumulate on circle of radius r.\
+add contiguity checking for more accuracy?\
+}

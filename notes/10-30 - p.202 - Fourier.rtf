@@ -1,0 +1,98 @@
+{\rtf1\ansi\ansicpg1252\cocoartf949\cocoasubrtf350
+{\fonttbl\f0\fnil\fcharset0 LucidaGrande;\f1\fnil\fcharset0 AppleSymbols;}
+{\colortbl;\red255\green255\blue255;}
+{\info
+{\author D. Casey Tucker}}\margl1440\margr1440\vieww12220\viewh15120\viewkind0
+\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\ql\qnatural\pardirnatural
+
+\f0\fs26 \cf0 Chapter 4 - Fourier Domain\
+	c = R + j I\
+	R,I 
+\f1 \uc0\u8712 
+\f0  real numbers\
+	j = \uc0\u8730 -1\
+	c* = R - j I\
+	c\uc0\u8321  = 2 + j1\
+	c\uc0\u8321 * = 2 - j1\
+\
+	Polar coordinates\
+		c = |c| ( cos\uc0\u952  + j sin\u952  )\
+		|c| = \uc0\u8730 ( R\'b2 + I\'b2 )\
+		\uc0\u952  = arctan(I/R)\
+	Euler\
+		exp( j \uc0\u952  ) = cos\u952  + j sin\u952 \
+		c = |c| exp( j \uc0\u952  )\
+		e.g.\
+			c\uc0\u8321  = 1 = j3\
+			c\uc0\u8321  = (\u8730 10) exp( j 71.6\'b0 )\
+	Functions\
+		F(u) = R(u) + j I(u)\
+		F*(u) = R(u) - j I(u)\
+		|F(u)| = \uc0\u8730 ( R\'b2(u)+I\'b2(u) )\
+		\uc0\u952 (u) = arctan( I(u) / R(u) )\
+	Continuous variables\
+		f(t) has period of T\
+\pard\tx720\tx1440\tqc\tx2400\tx2740\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\ql\qnatural\pardirnatural
+
+\fs20 \cf0 			\uc0\u8734 \
+
+\fs26 		f(t) =	\uc0\u8721 	c_n exp( j2\u960 nt/T )\
+
+\fs20 			n=-\uc0\u8734 \
+\pard\tx720\tx1440\tx2160\tqc\tx2960\tx3260\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\ql\qnatural\pardirnatural
+\cf0 				T/2\
+
+\fs26 		c_n = 1/T	\uc0\u8747 	f(t) exp( -j2\u960 nt/T ) dt | n = 0, \'b11, \'b12, ...\
+
+\fs20 				-T/2\
+\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\ql\qnatural\pardirnatural
+
+\fs26 \cf0 		Impulse\
+			\uc0\u948 (t) =	\{ \u8734 	| t=0\
+				\{ 0	| otherwise\
+
+\fs20 \
+\pard\tx720\tx1440\tqc\tx2320\tx2660\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\ql\qnatural\pardirnatural
+\cf0 			\uc0\u8734 \
+
+\fs26 			\uc0\u8747 	\u948 (t) dt = 1\
+
+\fs20 			-\uc0\u8734 \
+\
+			\uc0\u8734 \
+
+\fs26 			\uc0\u8747 	f(t) \u948 (t) dt = f(0)\
+
+\fs20 			-\uc0\u8734 \
+\
+			\uc0\u8734 \
+
+\fs26 			\uc0\u8747 	f(t) \u948 (t - t\u8320 ) dt = f(t\u8320 )\
+
+\fs20 			-\uc0\u8734 \
+\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\ql\qnatural\pardirnatural
+
+\fs26 \cf0 	Discrete\
+		\uc0\u948 (t) =	\{ 1 	| x=0\
+			\{ 0	| otherwise\
+\pard\tx720\tqc\tx1620\tx1900\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\ql\qnatural\pardirnatural
+
+\fs20 \cf0 \
+		\uc0\u8734 \
+
+\fs26 		\uc0\u8721 	\u948 (x) = 1\
+
+\fs20 		x=-\uc0\u8734 \
+\
+		\uc0\u8734 \
+
+\fs26 		\uc0\u8721 	f(x) \u948 (x) = f(0)\
+
+\fs20 		x=-\uc0\u8734 \
+\
+		\uc0\u8734 \
+
+\fs26 		\uc0\u8721 	f(x) \u948 (x - x\u8320 ) = f(x\u8320 )\
+
+\fs20 		x=-\uc0\u8734 \
+}

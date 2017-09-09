@@ -1,0 +1,95 @@
+{\rtf1\ansi\ansicpg1252\cocoartf949\cocoasubrtf330
+{\fonttbl\f0\fswiss\fcharset0 ArialMT;\f1\fnil\fcharset0 LucidaGrande;\f2\fnil\fcharset0 AppleSymbols;
+}
+{\colortbl;\red255\green255\blue255;}
+{\info
+{\author D. Casey Tucker}}\margl1440\margr1440\vieww11740\viewh14820\viewkind0
+\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\ql\qnatural\pardirnatural
+
+\f0\fs26 \cf0 Image formation model\
+	f(x,y) | (x,y) < 
+\f1 \uc0\u8734 , 0 < f(x,y) < \u8734 \
+	f(x,y) = i(x,y) * r(x,y)\
+		i(x,y) = amount of source illumination\
+			0 < i(x,y) < \uc0\u8734 \
+			on a clear day, our eyes 90,000 lm/m\'b2\
+			on a cloudy day, about 10,000 lm/m\'b2\
+			full moon, about 0.1 lm/m\'b2\
+			office lighting, about 1,000 lm/m\'b2\
+		r(x,y) = amount of reflected illumination by object\
+			0 < f(x,y) < 1\
+			black velvet = 0.01\
+			stainless steel = 0.65\
+			snow = 0.93\
+			standard mirror = 0.9\
+		with X-rays, transmissivity t(x,y) replaces r(x,y)\
+\
+Sampling\
+	the digitization of sensed data at a specified coordinate\
+	Quantization\
+		discretizing the intensity values fixed by\
+			the number of bits used to quantify the intensity\
+\
+	L = number of discrete intensities\
+	L = 2^k where k is the number of bits\
+	L 
+\f2 \uc0\u8712 
+\f1  [0, ... 2^k -1]\
+	M = number of pixel rows\
+	N = number of pixel columns\
+	b = M*N*k or for a square image, b = N\'b2k (M=N)\
+	\
+Basic relationships\
+	Neighbors\
+		4-neighbors (vertical / horizontal)\
+			N\uc0\u8324 (p) 
+\f2 \uc0\u8801 
+\f1  (x,y+1), (x+1,y), (x-1,y), (x,y-1)\
+		4-diagonals\
+			N
+\fs16 \sub D
+\fs26 \nosupersub (p) = (x-1,y-1), (x+1,y+1), (x+1,y-1), (x-1,y+1)\
+		8-neighbors\
+			N\uc0\u8328 (p) = N\u8324 (p), N
+\fs16 \sub D
+\fs26 \nosupersub (p)\
+		4-adjacency\
+			pixels p,q are adjacent if there is a path in V from p to q in N\uc0\u8324 (p)\
+				V is a set of acceptable intensity values\
+		8-adjacency\
+			pixels p,q are adjacent if there is a path in V from p to q in N\uc0\u8328 (p)\
+		M-adjacency\
+			two pixels p,q with values from V are m-adj if \
+				(i) q is in N\uc0\u8324 (p) or\
+				(ii) q is in N
+\fs16 D
+\fs26 (p) and the set N\uc0\u8324 (p) \'ac
+\f2 \uc0\u8745 
+\f1  N\uc0\u8324 (q)\
+			in the case of ambiguous adjacencies, the diagonal falls off\
+			take four adjacency if both \
+\
+		digital path from p(x,y) to q(s,t) is a sequence of distinct pixels that are adjacent\
+		(x\uc0\u8320 ,y\u8320 ), (x\u8321 ,y\u8321 ), ... (xn, yn)\
+		a closed path exists where (x\uc0\u8320 ,y\u8320 ) = (xn,yn), else it is open\
+\
+	S = a subset of pixels\
+	p and q are connected in S if there is a path in S from p to q\
+	two regions R
+\fs20 i
+\fs26 , R
+\fs20 j
+\fs26  are adjacent if their union forms a connected set under 4 or 8 adj\
+	\
+Distance measures\
+	pixels p(x,y), q(s,y), z(v,w)\
+	Properties:\
+		a) D(p,q) \uc0\u8805  0, D(p,q) = 0 iff p=q\
+		b) D(p,q) = D(q,p)\
+		c) D(p,z) = D(p,q) + D(q,z)\
+\
+	Euclidian distance\
+		De(p,q) = sqrt[(x-s)\'b2+(y-t)\'b2]\
+		D\uc0\u8324 (p,q) = |x-s| + |y-t|\
+		D\uc0\u8328 (p,q) = max(|x-s|, |y-t|)\
+}

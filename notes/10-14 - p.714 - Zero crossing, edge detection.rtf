@@ -1,0 +1,110 @@
+{\rtf1\ansi\ansicpg1252\cocoartf949\cocoasubrtf350
+{\fonttbl\f0\fnil\fcharset0 LucidaGrande;}
+{\colortbl;\red255\green255\blue255;}
+{\info
+{\author D. Casey Tucker}}\margl1440\margr1440\vieww11780\viewh13520\viewkind0
+\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\ql\qnatural\pardirnatural
+
+\f0\fs26 \cf0 Zero crossing\
+	The part of the image on the edge at which the second derivative is zero.\
+	\uc0\u8706 \'b2f/dx\'b2 = 0\
+	\
+3 steps\
+	1. image smoothing for noise\
+	2. detection of edge points\
+	3. edge localization\
+		thinning out to pixel-wide edges\
+\
+Edge detection\
+	\uc0\u8711 f = grad(f) = [g_x | g_y] = [ \u8706 f/\u8706 x | \u8706 f/\u8706 y ]\
+	mag(x,y) = M(x,y) = |\uc0\u8711 f| = \u8730 (g_x\'b2 + g_y\'b2)\
+	\uc0\u945 (x,y) = tan\u8315 \'b9 [ g_y / g_x ]\
+\
+	gradient vector is orthogonal to the gradeint.\
+	\uc0\u8711 f = [ -2 | 2 ]\
+	\uc0\u945  = tan\u8315 \'b9 [ 2/-2 ] = -45\u8304 \
+	mag = \uc0\u8730 [(-2)\'b2 + 2\'b2] = 2\u8730 2\
+	\
+Gradient ops\
+	g_x = \uc0\u8706 f(x,y)/\u8706 x = f(x+1,y) - f(x,y)\
+	g_y = \uc0\u8706 f(x,y)/\u8706 y = f(x,y+1) - f(x,y)\
+	\
+	Robert cross\
+		g_x			g_y\
+		-1	0		0	-1	\
+		0	-1		1	0\
+	Prewitt\
+		-1	-1	-1		-1	0	1	\
+		0	0	0		-1	0	1\
+		1	1	1		-1	0	1\
+	\
+	Diagonals\
+		Prewitt\
+		0	1	1		-1	-1	0\
+		-1	0	1		-1	0	1\
+		-1	-1	0		0	1	1\
+\
+\
+Canny edge detector - check it out at some point\
+\
+Marr-Hildreth\
+	Argument\
+		1) intensity changes aren't independent of image scale, so detection requires\
+		    the use of operators of different sizes\
+		2) abrupt intensity changes causes zero-crossings\
+	Proposal\
+		laplacian of a gaussian: \uc0\u8711 \'b2G\
+		G(x,y) = exp( -x\'b2 + y\'b2 / 2\uc0\u963 \'b2 )\
+		\uc0\u8711 \'b2G(x,y) = \u8706 \'b2/\u8706 x\'b2 G(x,y) + \u8706 \'b2/\u8706 y\'b2 G(x,y)\
+			=	\uc0\u8706 /\u8706 x[ (-x/\u963 \'b2) exp( -(x\'b2 + y\'b2) / 2\u963 \'b2 ) ] + \
+				\uc0\u8706 /\u8706 y[ (-y/\u963 \'b2) exp( -(x\'b2 + y\'b2) / 2\u963 \'b2 ) ]\
+			=	[x\'b2/\uc0\u963 \u8308  - 1/\u963 \'b2] exp(-(x\'b2+y\'b2) / 2\u963 \'b2 )\
+			=	[ x\'b2+y\'b2 - 2\uc0\u963 \'b2 / \u963 \u8308  ] exp( -(x\'b2+y\'b2) / 2\u963 \'b2 )\
+			=	LoG (mexican hat)\
+	mask size must be > 6\uc0\u963 \
+	width from crossing to crossing should be 2\uc0\u8730 2\u963 \
+\
+	g(x,y) = \uc0\u8711 \'b2G(x,y) * f(x,y)	//convolution\
+	g(x,y) = \uc0\u8711 \'b2[ G(x,y) * f(x,y) ]	//implies gaussian smoothing\
+	\
+\
+	1. filter f with an NxN gaussian (G) lowpass filter\
+	2. compute the laplacian on 1\
+	3. find the zero-crossings of f from 2\
+		create a 3x3 kernel\
+			-+	+-	-+\
+			+-	p	-+\
+			+-	-+	-+\
+		inspect for sign change in four cases\
+			left / right\
+			up / down\
+			2 diag / diag cases\
+		\
+		threshold the zero-crossing\
+			s.t. the abs value of the numerical difference must be > threshold\
+			-10	-2	-3\
+			-15	p	20\
+			-8	-4	-4\
+		horizontal zero-crossing |-15 - 20| = 35\
+\
+Edge detection often results in chunks of edges found across the image (p.720)\
+	Local processing\
+	1. compute the grad mag and angle of f\
+		\uc0\u8711 f = [ g_x  g_y ]\
+		M(x,y) = mag(\uc0\u8711 f) ~= |g_x| + |g_y|\
+		use Sobel\
+	2. form binary image g\
+		g(x,y) = \{ 1 	M(x,y) > thresh AND \uc0\u945 (x,y) = A +- Ta\
+		T = mag threshold A = angle Ta = band\
+		3. scan the rows of g and fill (set to 1) all gaps in each\
+		row that doesn't exceed some length k\
+	4. to detect gaps in any other direction \uc0\u952 ,\
+		then rotate g by \uc0\u952  and apply horizontal scanning procedure and then rotate back\
+	thresh mag < 20, \uc0\u952  > 90\
+\
+M	25	30	35	10	-10	20	25	10	40\
+\uc0\u945 	90	98	72	20	100	90	70	90	80\
+g	1	1	0	0	0	1	0	0	1\
+	1	1	0	0	0	1	1	1	1\
+\
+}
