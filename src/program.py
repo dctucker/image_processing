@@ -1,5 +1,12 @@
 # D. Casey Tucker
 
+from op import *
+import cv2
+import numpy as np
+
+HEIGHT = 700
+WIDTH  = 1000
+
 img = None
 img2 = None						 # our source PGM image
 add = None
@@ -45,8 +52,8 @@ def drawConnectors(i, pid):
 	x1 = chain[i].posLeft + kw
 	x2 = chain[pid].posLeft + chain[pid].posWidth - (kh * (i - pid)) - kw
 	x3 = x1
-	y = height - chain[0].posTop - (kh * (i - pid))
-	y1 = height - chain[0].posTop - kh
+	y = HEIGHT - chain[0].posTop - (kh * (i - pid))
+	y1 = HEIGHT - chain[0].posTop - kh
 	
 	while get(x2, y) == '#ffff00':
 		y -= kh
@@ -58,17 +65,17 @@ def drawConnectors(i, pid):
 	
 	stroke('#000000')
 	
-	line(x1-1, y, x1-1, height - chain[0].posTop)
-	line(x1+1, y, x1+1, height - chain[0].posTop)
-	line(x2-1, y, x2-1, height - chain[0].posTop)
-	line(x2+1, y, x2+1, height - chain[0].posTop)
+	line(x1-1, y, x1-1, HEIGHT - chain[0].posTop)
+	line(x1+1, y, x1+1, HEIGHT - chain[0].posTop)
+	line(x2-1, y, x2-1, HEIGHT - chain[0].posTop)
+	line(x2+1, y, x2+1, HEIGHT - chain[0].posTop)
 	line(x1, y-1, x2, y-1)
 	line(x1, y+1, x2, y+1)
 	
 	stroke('#ffff00')
 	line(x1, y, x2, y)
-	line(x1, y, x1, height - chain[0].posTop)
-	line(x2, y, x2, height - chain[0].posTop)
+	line(x1, y, x1, HEIGHT - chain[0].posTop)
+	line(x2, y, x2, HEIGHT - chain[0].posTop)
 	
 	"""
 	stroke('#ff00ff')
@@ -83,12 +90,12 @@ def drawChain():
 
 	noStroke()
 	fill('#000000')
-	rect(0, height - chain[0].posTop - cmdHeight, width, cmdHeight)
+	rect(0, HEIGHT - chain[0].posTop - cmdHeight, WIDTH, cmdHeight)
 	formula = ""
 
 	stroke('#000000')
 	fill('#000000')
-	rect(width - 200, 0, 200, height - chain[0].posTop)
+	rect(WIDTH - 200, 0, 200, HEIGHT - chain[0].posTop)
 	textSize(10)
 	
 	for i in range(len(chain)):
@@ -134,15 +141,15 @@ def drawChain():
 		stroke('#ffffff')
 		fill('#ffffff')
 		textAlign(LEFT)
-		text(formula, width - 200, 20 + i * 12)
-		#println(formula)
+		text(formula, WIDTH - 200, 20 + i * 12)
+		#print(formula)
 		form[i] = formula
 		formula = ""
 	
 
 
 def appendChain(iop): 
-	#System.out.println("Appended to chain: " + iop)
+	#System.out.print("Appended to chain: " + iop)
 	#chainLeft += chain[chain.length-1].posWidth
 	chainLeft = chain[chain.length - 1].posWidth + chain[chain.length - 1].posLeft
 	iop.setPos(chainLeft)
@@ -161,32 +168,8 @@ def removeChain(ch):
 	del(chain[-1])
 	fill('#000000')
 	stroke('#000000')
-	rect(0, chain[0].imgHeight, width, height)
+	rect(0, chain[0].imgHeight, WIDTH, HEIGHT)
 
-
-def setupChain(filename):
-	#size(extraWidth + constrain(zoom * img.getWidth(), 400, 1024)	, 
-	#		 zoom * img.getHeight() + 220 )
-	background(0)
-	stroke(255)
-	chain = [None] # a nop to begin with
-
-
-	if(img == null) :
-		if(filename.endsWith(".pgm")):
-			img = PGMImage(filename)
-			chain[0] = ImgOpPalette(img, filename)
-		else:
-			img = LoadImage(filename)
-			chain[0] = ImgOpColor(img, filename)
-
-	zoom = 1
-	while( chain[0].imgHeight * zoom < (height / zoom) ) :
-		#println(""+ (chain[0].imgHeight * zoom) +" < "+ (height / zoom))
-		zoom += 1
-	
-	zoom -= 1
-	#println("Zoom set to " + zoom ) 
 
 
 def updateChain():
@@ -194,7 +177,7 @@ def updateChain():
 	for op in range(len(chain)):
 		if( chain[op].update() ): # if our panels have been tweaked, recompute.
 			chain[op].compute()
-			#println("updating " + op)
+			#print("updating " + op)
 			if chain[op].visible:
 				chain[op].loadPImage(zoom)
 			ret = true
@@ -209,11 +192,11 @@ def updateChain():
 def drawCmd():
 	fill('#000000')
 	stroke('#000000')
-	#rect(0, dispimg.height, width, cmdHeight)
+	#rect(0, dispimg.height, WIDTH, cmdHeight)
 	fill('#cccccc')
 	textAlign(LEFT)
 	textSize(12)
-	text("> " + cmd, 5, height - posHeight - 15)
+	text("> " + cmd, 5, HEIGHT - posHeight - 15)
 
 
 def dispChain(i):
@@ -277,9 +260,9 @@ def ls(path):
 		for i in range(len(d)):
 			dn = d[i].getName()
 			if(d[i].isDirectory()) :
-				println(dn + "/")
+				print (dn + "/")
 			else :
-				println(dn)
+				print (dn)
 			
 		
 	
@@ -296,7 +279,7 @@ def LF():
 		while True:
 			i = int( random(0, d.length - 1) )
 			dn = CWD + "proj/test/" + d[i].getName() 
-			println("" + i + ":" +dn)
+			print ("" + i + ":" +dn)
 			if d[i].isDirectory() and d[i].getName().startsWith("."):
 				break
 		return dn
@@ -388,7 +371,7 @@ def execCmd():
 			ef = chain[chain.length-1]
 			filename = chain[0].title
 			updateChain()
-			println( filename + "\t" + ef.eyelx + "\t" + ef.eyely + "\t" + ef.eyerx + "\t" + ef.eyery )
+			print ( filename + "\t" + ef.eyelx + "\t" + ef.eyely + "\t" + ef.eyerx + "\t" + ef.eyery )
 
 			if r != edef.length -1:
 				break
@@ -628,10 +611,32 @@ def draw():
 	
 	drawCmd()
 
+def setupChain(filename):
+	global img, chain
+	#size(extraWidth + constrain(zoom * img.getWidth(), 400, 1024)	, 
+	#		 zoom * img.getHeight() + 220 )
+	chain = [None] # a nop to begin with
+
+	if img is None:
+		img = ImgData(cv2.imread('LoadPGM/data/'+filename))
+		chain[0] = ImgOpPalette(img, filename)
+
+	zoom = 1
+	while chain[0].imgHeight * zoom < HEIGHT / zoom:
+		#print (""+ (chain[0].imgHeight * zoom) +" < "+ (HEIGHT / zoom))
+		zoom += 1
+	
+	zoom -= 1
+	#print ("Zoom set to " + zoom ) 
+
+
 def setup() :
-	size(1100, 700)
-	font = createFont("Lucida Sans Unicode", 11)
-	textFont(font, 12)
+	cv2.namedWindow('main')
+	dc = np.zeros((700,1100,3), np.uint8)
+	cv2.imshow('main', dc)
+
+	#font = createFont("Lucida Sans Unicode", 11)
+	#textFont(font, 12)
 	
 	if assignment == 1:
 		setupAssignment1()
@@ -646,29 +651,29 @@ def setup() :
 	
 
 	posHeight = chain[0].posTop
-	dispWidth = width
-	dispHeight = height - posHeight - cmdHeight
+	dispWidth = WIDTH
+	dispHeight = HEIGHT - posHeight - cmdHeight
 
-	println(""+dispWidth+"x"+dispHeight)
+	print str(dispWidth) + "x" + str(dispHeight)
 	for op in range(1,len(chain)): # compute each op
 		chain[op].compute()
 		chain[op].loadPImage(zoom)
 	
 
-	dispimg = chain[0].loadPImage(zoom); # let's see...
+	dispimg = chain[0].loadPImage(zoom)
 
 	printChain()
 	draw()
 	noLoop()
 
-import cv2
-import numpy as np
+if __name__ == '__main__':
+	setup()
 
-cv2.namedWindow('image')
+	dc[ 0:img.shape[0], 0:img.shape[1] ] = img
 
-while True:
-	key = cv2.waitKey(1) & 0xff
-	if key == ord('q'):
-		break
+	while True:
+		key = cv2.waitKey(1) & 0xff
+		if key == ord('q'):
+			break
 
-cv2.destroyAllWindows()
+	cv2.destroyAllWindows()
