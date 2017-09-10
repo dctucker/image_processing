@@ -78,7 +78,7 @@ public class ImgOpBitSubst extends ImageOp {
     super.display();
     fill(#cccccc);
     textSize(12);
-    text("Â"      , posLeft + posWidth / 2 - 20, height - posTop / 3 - 5);
+    text("ï¿½"      , posLeft + posWidth / 2 - 20, height - posTop / 3 - 5);
     textSize(18);
     drawOperator((char)0x2228);
     text("2"      , posLeft + posWidth / 2 - 5, height - posTop / 3);
@@ -103,6 +103,6 @@ public class ImgOpNegate extends ImageOp {
   }
   public void display(){
     super.display();
-    drawOperator('Â');
+    drawOperator('\u00ac');
   }
 }

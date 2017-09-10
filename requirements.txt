@@ -1,0 +1,6 @@
+opencv-python
+pillow
+bunch
+behave
+pyhamcrest
+colorama
