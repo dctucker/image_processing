@@ -7,6 +7,7 @@ import numpy as np
 HEIGHT = 700
 WIDTH  = 1000
 
+dc = None
 img = None
 img2 = None						 # our source PGM image
 add = None
@@ -20,13 +21,21 @@ dispimg = None							 # the main displayed image
 dispWidth = None
 dispHeight = None # width/height of the image display area
 cmdHeight = 30
-posHeight = None
+posHeight = 550
 font = None
 zoom = 8
 extraWidth = 0
 selChain = 0
+cmd = ""
+
 
 assignment = 5
+
+def image(img,left=0,top=0):
+	global dc
+	dc[ top:top+img.shape[0], left:left+img.shape[1] ] = img
+	cv2.imshow('main', dc)
+
 
 def getChainID(ch):
 	for c in chain:
@@ -35,12 +44,15 @@ def getChainID(ch):
 	return -1
 
 def printChain():
+	global chain
+	i=0
 	for c in chain:
 		pid = getChainID(c.input)
 		parent = ""
 		if pid != -1:
 			parent = " " + pid + ": " + c.input
-		print "" + i +": "+ c + parent
+		print str(i) +": "+ c + parent
+		i += 1
 
 def drawConnectors(i, pid):
 	kw = 6
@@ -88,23 +100,17 @@ def drawChain():
 	kw = 6
 	kh = 3
 
-	noStroke()
-	fill('#000000')
-	rect(0, HEIGHT - chain[0].posTop - cmdHeight, WIDTH, cmdHeight)
+	cv2.rectangle(dc, (0, HEIGHT - chain[0].posTop - cmdHeight), ( WIDTH, cmdHeight), (0,0,0), -1)
 	formula = ""
 
-	stroke('#000000')
-	fill('#000000')
-	rect(WIDTH - 200, 0, 200, HEIGHT - chain[0].posTop)
-	textSize(10)
+	cv2.rectangle(dc, (200, 0), (WIDTH - 200, HEIGHT - chain[0].posTop), (0,0,0), -1)
+	textSize=10
 	
 	for i in range(len(chain)):
-		curF0 = chain[i].toString()
-		curF1; #chain[i].input.toString()
-		curF2
+		curF0 = str(chain[i])
 		
-		formula += (char)('a' + i) + " = "
-		if(i == 0) :
+		formula += chr(ord('a') + i) + " = "
+		if i == 0:
 			formula += curF0
 		elif isinstance(chain[i], ImgOpArith):
 			pid1 = getChainID(chain[i].input1)
@@ -138,12 +144,10 @@ def drawChain():
 		
 		#formula += ";"
 
-		stroke('#ffffff')
-		fill('#ffffff')
-		textAlign(LEFT)
-		text(formula, WIDTH - 200, 20 + i * 12)
+		font=cv2.FONT_HERSHEY_SIMPLEX
+		cv2.putText(dc, formula, (WIDTH - 200, 20 + i * 12), font, 1, (255,255,255), cv2.LINE_AA)
 		#print(formula)
-		form[i] = formula
+		form += [formula]
 		formula = ""
 	
 
@@ -173,7 +177,7 @@ def removeChain(ch):
 
 
 def updateChain():
-	ret = false
+	ret = False
 	for op in range(len(chain)):
 		if( chain[op].update() ): # if our panels have been tweaked, recompute.
 			chain[op].compute()
@@ -190,23 +194,24 @@ def updateChain():
 
 
 def drawCmd():
-	fill('#000000')
-	stroke('#000000')
+	fill = (0,0,0)
+	stroke = (0,0,0)
 	#rect(0, dispimg.height, WIDTH, cmdHeight)
-	fill('#cccccc')
-	textAlign(LEFT)
-	textSize(12)
-	text("> " + cmd, 5, HEIGHT - posHeight - 15)
+	fill = (0xcc, 0xcc, 0xcc)
+	textAlign = 'LEFT'
+	textSize = 12
+	font = cv2.FONT_HERSHEY_SIMPLEX
+	cv2.putText(dc, "> " + cmd, (5, HEIGHT - posHeight - 15), font, 1, stroke, 2, cv2.LINE_AA)
 
 
 def dispChain(i):
-	fill('#000000')
-	noStroke()
-	rect(0,0, dispWidth, dispHeight)
+	global dispimg, dispWidth, dispHeight
+	fill = (0,0,0)
+	cv2.rectangle(dc, (0,0), (dispWidth, dispHeight), fill, -1)
 
 	if(i < chain.length):
 		for ch in range(len(chain)):
-			chain[ch].selected = false
+			chain[ch].selected = False
 		
 		dispimg = chain[i].pimg
 		chain[i].selected = true
@@ -219,26 +224,20 @@ def mousePressed():
 
 def mouseReleased():
 	draw()
-	noLoop()
 
 cmd=""
 
 smd = []
-def hasElem(k, sk):
-	if(smd.length > k):
-		if(smd[k].equals(sk)):
-			return true
-		
-	
-	return false
-
-def hasElem(k):
-	if(smd.length > k):
-		return smd[k]
-	
-	return ""
-
-
+def hasElem(k, sk=None):
+	if sk == None:
+		if len(smd) > k:
+			return smd[k]
+		return ""
+	else:
+		if len(smd) > k:
+			if(smd[k].equals(sk)):
+				return true
+		return False
 
 def connectChain(iop):
 	appendChain(iop)
@@ -280,7 +279,7 @@ def LF():
 			i = int( random(0, d.length - 1) )
 			dn = CWD + "proj/test/" + d[i].getName() 
 			print ("" + i + ":" +dn)
-			if d[i].isDirectory() and d[i].getName().startsWith("."):
+			if d[i].isDirectory() and d[i].getName().startswith("."):
 				break
 		return dn
 
@@ -345,10 +344,11 @@ def LE():
 	"""
 
 def execCmd():
+	global cmd
 	smd = cmd.split(" ")
 
-	if( cmd.equals("q") ):
-		exit()
+	if cmd == "q":
+		sys.exit()
 	elif( hasElem(0, "l") ):
 		#img = null
 		#setupChain(hasElem(1))
@@ -388,86 +388,86 @@ def execCmd():
 			p1 = int(hasElem(2))
 		
 		
-		if(op.equals("hist")):
+		if op == "hist":
 			appendChain(ImgOpHist(chain[ch]))
 			chain[chain.length - 1].updateme=true
-		elif(op.equals("nhist")):
+		elif op == "nhist":
 			appendChain(ImgNoiseHist(chain[ch]))
 			chain[chain.length - 1].updateme=true
-		elif( op.equals("+") or op.equals("-") or op.equals("*") or op.equals("/") ):
+		elif op in ('+','-','*','/'):
 			ch1 = ch
 			ch2 = int(hasElem(3))
 			if ch2 == 0:
 				ch2 = int(hasElem(2))
 			connectChain(ImgOpArith(chain[ch1], chain[ch2], op.charAt(0) ))
-		elif(op.equals("neg")):
+		elif(op == "neg"):
 			connectChain(ImgOpNegate(chain[ch]))
-		elif(op.equals("gamma")):
+		elif(op == "gamma"):
 			pf1 = float(hasElem(2))
 			pf2 = float(hasElem(3))
 			connectChain(ImgOpGamma(chain[ch], pf1, pf2))
-		elif(op.equals("thresh")):
+		elif(op == "thresh"):
 			connectChain(ImgOpThreshold ( chain[ch], p1 ) )
-		elif(op.equals("equal")) :
+		elif op == "equal":
 			connectChain(ImgOpHistEq(chain[ch]))
-		elif(op.equals("filter")):
+		elif(op == "filter"):
 			connectChain(ImgOpFilter(chain[ch]))
-		elif(op.equals("sharp")):
+		elif(op == "sharp"):
 			connectChain(ImgOpSharp(chain[ch]))
-		elif(op.equals("median")):
+		elif(op == "median"):
 			connectChain(ImgOpMedian(chain[ch]))
-		elif(op.equals("laplace")):
+		elif(op == "laplace"):
 			filt = int(hasElem(2))
 			connectChain(ImgOpLaplacian(chain[ch], filt))
-		elif(op.equals("sobel")):
+		elif(op == "sobel"):
 			connectChain(ImgOpSobel(chain[ch]))
-		elif(op.equals("prewitt")):
+		elif(op == "prewitt"):
 			connectChain(ImgOpPrewitt(chain[ch]))
-		elif(op.equals("5x5")):
+		elif(op == "5x5"):
 			connectChain(ImgOp5x5(chain[ch]))
-		elif(op.equals("gauss")):
+		elif(op == "gauss"):
 			pf2 = float(hasElem(3))
 			if(p1 == 0):
 				connectChain(ImgOpGaussian(chain[ch]))
 			else:
 				connectChain(ImgOpGaussian(chain[ch], p1, pf2))
 			
-		elif(op.equals("scale")):
+		elif(op == "scale"):
 			connectChain(ImgOpScale(chain[ch]))
-		elif(op.equals("clip")):
+		elif(op == "clip"):
 			connectChain(ImgOpClip(chain[ch]))
-		elif(op.equals("ch")):
+		elif(op == "ch"):
 			connectChain(ImgOpChannel(chain[ch], p1))
-		elif(op.equals("hsi")):
+		elif(op == "hsi"):
 			connectChain(ImgOpRGBtoHSI(chain[ch]))
-		elif(op.equals("rgb")):
+		elif(op == "rgb"):
 			connectChain(ImgOpHSItoRGB(chain[ch]))
-		elif(op.equals("dft")):
+		elif(op == "dft"):
 			connectChain(ImgOpDFT4(chain[ch]))
-		elif(op.equals("edgelocal")):
+		elif(op == "edgelocal"):
 			connectChain(ImgOpEdgeLocal(chain[ch]))
-		elif(op.equals("hgap")):
+		elif(op == "hgap"):
 			connectChain(ImgOpHGap(chain[ch]))
-		elif(op.equals("vgap")):
+		elif(op == "vgap"):
 			connectChain(ImgOpVGap(chain[ch]))
-		elif(op.equals("athresh")):
+		elif(op == "athresh"):
 			p2 = int(hasElem(3))
 			connectChain(ImgOpAThresh(chain[ch], p1, p2))
-		elif(op.equals("gthresh")):
+		elif(op == "gthresh"):
 			connectChain(ImgSegGThresh(chain[ch]))
-		elif(op.equals("gmean")):
+		elif(op == "gmean"):
 			connectChain(ImgOpGMean(chain[ch]))
-		elif(op.equals("amean")):
+		elif(op == "amean"):
 			connectChain(ImgOpAMean(chain[ch]))
-		elif(op.equals("eye")):
+		elif(op == "eye"):
 			connectChain(ImgEyeFinder2(chain[ch]))
-		elif(op.equals("rowsum")):
+		elif(op == "rowsum"):
 			connectChain(ImgOpRowSum(chain[ch]))
-		elif(op.equals("colsum")):
+		elif(op == "colsum"):
 			connectChain(ImgOpColSum(chain[ch]))
-		elif(op.equals("eyecrop")):
+		elif(op == "eyecrop"):
 			connectChain(ImgEyeCrop(chain[ch]))
-		elif(op.equals("sumxy")):
+		elif(op == "sumxy"):
 			connectChain(ImgOpSumXY(chain[ch]))
 
 	elif( hasElem(0, "r") ):
@@ -531,25 +531,22 @@ def execCmd():
 		execMacro(macro)
 	
 	
-	elif( cmd.startsWith("assignment ") ):
+	elif( cmd.startswith("assignment ") ):
 		assignment = Integer.parseInt(smd[1])
 		img = null
-		noLoop()
 		setup()
 	
 	
-	elif( cmd.startsWith("[") ):
+	elif( cmd.startswith("[") ):
 		for i in range(len(cmd), 0, -1):
 			prevChain()
 		
-	elif( cmd.startsWith("]") ):
+	elif( cmd.startswith("]") ):
 		for i in range(len(cmd), 0, -1):
 			nextChain()
 		
 	
 	
-	cmd = ""
-
 
 def execMacro(macro):
 	cmds = split(macro, ";")
@@ -570,27 +567,29 @@ def prevChain():
 	dispChain(selChain)
 
 
-def keyPressed():
-	if(key != CODED):
-		if keyCode == BACKSPACE:
-			if cmd.length() > 0:
-				cmd = cmd.substring(0, cmd.length() - 1)
-		elif keyCode in (RETURN,ENTER):
-			execCmd()
-		elif keyCode == '[':
-			prevChain()
-		elif keyCode == ']':
-			nextChain()
-		else:
-			cmd += key
-			drawCmd()
-	loop()
+def keyPressed(keyCode):
+	global cmd
+	if keyCode == "\0":
+		return
+	if keyCode == "\b":
+		if len(cmd) > 0:
+			cmd = cmd[0:-1]
+	elif keyCode in ("\n","\r"):
+		execCmd()
+	elif keyCode == '[':
+		prevChain()
+	elif keyCode == ']':
+		nextChain()
+	else:
+		cmd += keyCode
+		drawCmd()
+	print cmd
 
 def keyReleased():
 	draw()
-	noLoop()
 
 def draw():
+	global dispimg, chain
 	updChain = updateChain()
 
 	if assignment == 2:
@@ -631,9 +630,9 @@ def setupChain(filename):
 
 
 def setup() :
+	global dc, chain, dispimg
 	cv2.namedWindow('main')
 	dc = np.zeros((700,1100,3), np.uint8)
-	cv2.imshow('main', dc)
 
 	#font = createFont("Lucida Sans Unicode", 11)
 	#textFont(font, 12)
@@ -662,18 +661,20 @@ def setup() :
 
 	dispimg = chain[0].loadPImage(zoom)
 
-	printChain()
+	#printChain()
 	draw()
-	noLoop()
 
 if __name__ == '__main__':
 	setup()
-
-	dc[ 0:img.shape[0], 0:img.shape[1] ] = img
+	draw()
 
 	while True:
 		key = cv2.waitKey(1) & 0xff
 		if key == ord('q'):
 			break
+		elif key <= 127:
+			keyPressed(chr(key))
+		draw()
 
 	cv2.destroyAllWindows()
+

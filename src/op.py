@@ -1,9 +1,18 @@
+import cv2
 from img import *
 from gui import *
-from program import HEIGHT
+from program import HEIGHT, dc
 
 class ImageOp(ImgData):   # we'll put all image operations as a subclass of ImageOp
 	def __init__(self, img):
+		self.imgWidth=None
+		self.imgHeight=None
+		self.imgChannels=None
+		self.imgMax=None
+		self.imgData=[]
+		self.imgPalette=[]
+		self.imgScale=1.0
+		self.pimg=None
 		self.title = "";						# default title to be drawn above panel
 		self.updateme = True;			# do I really need to be redrawn?
 		self.posLeft = 0;							# default left position for the panel
@@ -14,6 +23,7 @@ class ImageOp(ImgData):   # we'll put all image operations as a subclass of Imag
 		self.visible = None
 		self.selected = None
 		self.controls = []
+		self.pimg = None
 
 		ImgData.__init__(self, img)
 		self.input = img
@@ -26,7 +36,7 @@ class ImageOp(ImgData):   # we'll put all image operations as a subclass of Imag
 		return self.title
 
 	def printOut(self):
-		loadPImage(zoom)
+		self.loadPImage(zoom)
 		for ch in range(self.imgChannels):
 			print "channel", ch
 			for y in range(self.imgHeight):
@@ -96,28 +106,29 @@ class ImageOp(ImgData):   # we'll put all image operations as a subclass of Imag
 					if not chBypass[ch]:
 						self.imgData[x][y][ch] = calc(x,y,ch)
 
-		updateme = false
+		self.updateme = False
 		return self
 	
 	def drawBox(self): # draw the box for the panel
-		textFont(font)
-		if selected:
-			fill('#445566')
+		font = cv2.FONT_HERSHEY_SIMPLEX
+		if self.selected:
+			fill = (0x66, 0x55, 0x44)
 		else:
-			fill('#333333')
+			fill = (0x33, 0x33, 0x33)
 		
-		stroke('#CCCC00')
-		rect(self.posLeft, HEIGHT-posTop, posWidth - 2, posTop )
-		textAlign(CENTER)
-		fill('#cccc00')
-		rect(self.posLeft, HEIGHT-posTop, posWidth - 2, 9)
-		fill('#000000')
-		text(title, (self.posLeft + self.posLeft + posWidth) / 2, HEIGHT - posTop + 9)
+		stroke = (0x00, 0xcc, 0xcc)
+		cv2.rectangle(dc, (self.posLeft, HEIGHT-self.posTop), (self.posWidth - 2, self.posTop), fill, -1 )
+		cv2.rectangle(dc, (self.posLeft, HEIGHT-self.posTop), (self.posWidth - 2, self.posTop), stroke, 1 )
+		textAlign = 'CENTER'
+		fill = (0x00, 0xcc, 0xcc)
+		cv2.rectangle(dc, (self.posLeft, HEIGHT-self.posTop), (self.posWidth - 2, 9), fill, -1)
+		fill = (0, 0, 0)
+		cv2.putText(dc, self.title, ((self.posLeft + self.posLeft + self.posWidth) / 2, HEIGHT - self.posTop + 9), font, 1, fill, cv2.LINE_AA )
 	
-	def loadPImage(self):								 # loads the image for onscreen display
-		pimg = super.loadPImage(zoom)
-		updateme = false
-		return pimg
+	def loadPImage(self, zoom=None):								 # loads the image for onscreen display
+		self.pimg = ImgData.loadPImage(self, zoom)
+		updateme = False
+		return self.pimg
 	
 
 	def drawOperator(self, operation):
@@ -141,17 +152,20 @@ class ImageOp(ImgData):   # we'll put all image operations as a subclass of Imag
 	def calc(x, y, ch):			# main calculation for each pixel
 		return self.input.imgData[x][y][ch]
 	
-	def display(): drawBox(); 				 # draw the control panel
-	def update(): return updateme;  # update self
-	def setPos(l) : self.posLeft = l; 	# reposition panel controls
+	def display(self):
+		self.drawBox(); 				 # draw the control panel
+	def update(self):
+		return self.updateme;  # update self
+	def setPos(self,l):
+		self.posLeft = l; 	# reposition panel controls
 
 
 class ImgOpPalette(ImageOp):
 	def __init__(self, img, fn=None):
 		ImageOp.__init__(self, img)
 		self.setupScrollbars()
-		updateme = True
-		title = "Palette"
+		self.updateme = True
+		self.title = "Palette"
 		self.hsr1 = None
 		self.hsg1 = None
 		self.hsb1 = None
@@ -161,57 +175,60 @@ class ImgOpPalette(ImageOp):
 		if fn is not None:
 			#this.in = img
 			self.copyFrom(img)
-			title = fn
+			self.title = fn
 			#compute()
 	
 	def display(self):
 		ImageOp.display(self)
 		
 		# draw the palette scrollbars
-		hsr1.display()
-		hsg1.display()
-		hsb1.display()
-	
+		if self.hsr1:
+			self.hsr1.display()
+			self.hsg1.display()
+			self.hsb1.display()
+
 	def setPos(self,l):
 		super.setPos(l)
-		hsr1.setPos(l+5)
-		hsg1.setPos(l+5)
-		hsb1.setPos(l+5)
+		if self.hsr1:
+			hsr1.setPos(l+5)
+			hsg1.setPos(l+5)
+			hsb1.setPos(l+5)
 	
 	def update(self):
-		r1 = r
-		g1 = g
-		b1 = b
-		hsr1.update()
-		hsg1.update()
-		hsb1.update()
-		r = hsr1.getVal()
-		g = hsg1.getVal()
-		b = hsb1.getVal()
+		r1 = self.r
+		g1 = self.g
+		b1 = self.b
+		if self.hsr1:
+			self.hsr1.update()
+			self.hsg1.update()
+			self.hsb1.update()
+			self.r = hsr1.getVal()
+			self.g = hsg1.getVal()
+			self.b = hsb1.getVal()
 		
-		if r != r1 or g != g1 or b != b1:
-			doPalette()
-			return true
+		if self.r != r1 or self.g != g1 or self.b != b1:
+			self.doPalette()
+			return True
 		
-		return false
+		return False
 	
 	def doPalette(self):		 # deal with the palette scrollbars and redraw if needed
 		setPalette(r,g,b)
-		pimg = loadPImage(zoom); 
+		self.pimg = self.loadPImage(zoom); 
 		#drawPalette((width - img.imgMax)/2, HEIGHT -190)
 	
 
 	def setupScrollbars(self):
 		global HEIGHT
-		hsr1 = HScrollbar(5 + self.posLeft, HEIGHT - self.posTop + 35, "Red")
-		hsg1 = HScrollbar(5 + self.posLeft, HEIGHT - self.posTop + 60, "Green")
-		hsb1 = HScrollbar(5 + self.posLeft, HEIGHT - self.posTop + 85, "Blue")
-		hsr1.setColor((128,32,32))
-		hsg1.setColor((32,96,32))
-		hsb1.setColor((32,32,128))
-		hsr1.setVal(1.0)
-		hsg1.setVal(1.0)
-		hsb1.setVal(1.0)
+		self.hsr1 = HScrollbar(5 + self.posLeft, HEIGHT - self.posTop + 35, "Red")
+		self.hsg1 = HScrollbar(5 + self.posLeft, HEIGHT - self.posTop + 60, "Green")
+		self.hsb1 = HScrollbar(5 + self.posLeft, HEIGHT - self.posTop + 85, "Blue")
+		self.hsr1.setColor((128,32,32))
+		self.hsg1.setColor((32,96,32))
+		self.hsb1.setColor((32,32,128))
+		self.hsr1.setVal(1.0)
+		self.hsg1.setVal(1.0)
+		self.hsb1.setVal(1.0)
 	
 
 
@@ -264,18 +281,19 @@ class ImgOpGamma(ImageOp):
 	
 	def drawGraph():	 # draws the gamma curve
 		global HEIGHT, WIDTH
-		stroke('#888888')
-		fill('#000000')
-		rect(15 + self.posLeft, HEIGHT - posTop + 10, 64, 64)
-		stroke('#222266')
-		line(15 + self.posLeft, HEIGHT - posTop + 10 + 64, 15 + self.posLeft+64, HEIGHT-posTop + 10)
-		stroke('#cccccc')
+		stroke = (0x88, 0x88, 0x88)
+		fill = (0,0,0)
+		cv2.rectangle(dc, (15 + self.posLeft, HEIGHT - posTop + 10), ( 15 + self.posLeft + 64, HEIGHT - posTop + 10 + 64), fill, -1)
+		cv2.rectangle(dc, (15 + self.posLeft, HEIGHT - posTop + 10), ( 15 + self.posLeft + 64, HEIGHT - posTop + 10 + 64), stroke, 1)
+		stroke = (0x66, 0x22, 0x22)
+		cv2.line(dc, (15 + self.posLeft, HEIGHT - posTop + 10 + 64), (15 + self.posLeft+64, HEIGHT-posTop + 10), stroke)
+		stroke = (0xcc, 0xcc, 0xcc)
 		for p in range(100):
 			i = p * 0.01
 			v = pow(offset + i, gamma)
 			px = int(self.posLeft + 15 + 64*i)
 			py = int(HEIGHT - posTop + 10 + 64 - constrain(64*v, 0,64))
-			point(px, py);			
+			dc[py, px] = stroke
 		
 	
 	def update():
@@ -283,17 +301,17 @@ class ImgOpGamma(ImageOp):
 		hOffset.update()
 		g = hGamma.getVal()
 		o = hOffset.getVal()
-		#updateme = false
+		#updateme = False
 
-		if(gamma != g):
-			gamma = g
-			updateme = true
+		if(self.gamma != g):
+			self.gamma = g
+			self.updateme = true
 		
 		if(offset != o):
 			offset = o
-			updateme = true
+			self.updateme = true
 		
-		return updateme
+		return self.updateme
 	
 
 
@@ -323,7 +341,7 @@ class ImgOpInvLog(ImgOpGamma):
 		return (int)(constrain( imgMax * pow(offset + v, gamma), 0, 255) )
 	
 	def display():
-		super.display(); #drawBox()
+		ImgOpGamma.display(self); #drawBox()
 		#if(updateme) :
 		self.drawGraph()
 		self.hGamma.display()
@@ -331,29 +349,30 @@ class ImgOpInvLog(ImgOpGamma):
 		#
 	
 	def drawGraph():	 # draws the gamma curve
-		stroke('#888888')
-		fill('#000000')
-		rect(15 + self.posLeft, HEIGHT - posTop + 10, 64, 64)
-		stroke('#222266')
-		line(15 + self.posLeft, HEIGHT - posTop + 10 + 64, 15 + self.posLeft+64, HEIGHT-posTop + 10)
-		stroke('#cccccc')
+		stroke = (0x88, 0x88, 0x88)
+		fill = (0,0,0)
+		cv2.rectangle(dc, (15 + self.posLeft, HEIGHT - posTop + 10), (15 + posLeft + 64, HEIGHT - posTop + 64), fill, -1)
+		cv2.rectangle(dc, (15 + self.posLeft, HEIGHT - posTop + 10), (15 + posLeft + 64, HEIGHT - posTop + 64), stroke, 1)
+		stroke = (0x66, 0x22, 0x22)
+		cv2.line(dc, (15 + self.posLeft, HEIGHT - posTop + 10 + 64), (15 + self.posLeft+64, HEIGHT-posTop + 10), stroke, 1)
+		stroke = (0xcc, 0xcc, 0xcc)
 		for p in range(100):
 			i = p * 0.01
 			v = factor * exp(i)
 			px = int(self.posLeft + 15 + 64*i)
 			py = int(HEIGHT - posTop + 10 + 64 - constrain(64*v, 0,64))
-			point(px, py);			
+			dc[py, px] = stroke;			
 		
 	
 	def update():
 		hFactor.update()
 		f = hFactor.getVal()
-		updateme = false
+		self.updateme = False
 
 		if(factor != f):
 			factor = f
-			updateme = true
+			self.updateme = true
 		
-		return updateme
+		return self.updateme
 	
 

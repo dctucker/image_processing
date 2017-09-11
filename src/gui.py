@@ -152,14 +152,14 @@ class HScrollbar:
 			if(keyPressed):
 				lastKey = keyCode
 		else :
-			fill(102, 102, 102)
+			fill = (102, 102, 102)
 		
 		rect(spos, ypos, sheight, sheight)
 		
 		#textFont(font, 12)
-		fill('#cccccc')
-		textAlign(CENTER)
-		text(title, (sposMax + sposMin) / 2, ypos - 1)
+		fill = (0xcc, 0xcc, 0xcc)
+		textAlign = 'CENTER'
+		text(dc, title, ((sposMax + sposMin) / 2, ypos - 1), font, 1, (0,0,0), 2, cv2.LINE_AA )
 
 		gv = self.getVal()
 		if(self.getReal() < 0) :
@@ -170,7 +170,7 @@ class HScrollbar:
 			ofs = 0
 		
 		
-		fill('#ffffff')
+		fill = (255, 255, 255)
 		gv *= pow(10, decimals)
 		gvi = int(gv)
 		gv = gvi / float(pow(10,decimals))

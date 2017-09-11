@@ -1,8 +1,11 @@
 import numpy as np
 
+def PImage(width, height, channels=3):
+	return np.zeros((height,width,channels), np.uint8)
+
 class ImgData:
-	def __str__():
-		return ""; #"[" + imgWidth + "x" + imgHeight + "/" + imgChannels + "]"
+	def __str__(self):
+		return str(self.imgData) # ""; #"[" + imgWidth + "x" + imgHeight + "/" + imgChannels + "]"
 	
 	def ImgDataInit(self, input):
 		if isinstance(input, ImgData):
@@ -24,11 +27,13 @@ class ImgData:
 		self.ImgDataInit(input)
 		
 		self.imgData = np.zeros((self.imgHeight,self.imgWidth,self.imgChannels), np.uint8)
-		#pimg = PImage(self.imgWidth * zoom, self.imgHeight * zoom)
+		zoom = 1
+		self.pimg = PImage(self.imgWidth * zoom, self.imgHeight * zoom)
 		self.imgPalette = np.zeros((self.imgMax+1, self.imgChannels, 3), np.uint8)
 	
 	# copy pixel and palette data from an existing image
 	def copyFrom(self, input):
+		print "copyfrom"
 		self.copyPalette(input)
 		for y in range(self.imgWidth):
 			for x in range(self.imgHeight):
@@ -40,35 +45,73 @@ class ImgData:
 		for ch in range(input.imgChannels):
 			for i in range(self.imgMax+1):
 				self.imgPalette[i][ch] = input.imgPalette[i][ch]
-			
-				
 	
 	# draws the image to the display
 	def draw(self):
-		image(pimg, 0,0)
-	
+		image(self.pimg, 0,0)
 	
 	# prepares the PImage for display
-	def loadPImage(self):
-		if pimg is None:
-			pimg = PImage(imgWidth, imgHeight)
-		
-		pimg.loadPixels()
-		if self.imgChannels == 1:
-			for i in range(pimg.pixels.length):
-				x = i % imgWidth
-				y = i / imgWidth
-				pimg.pixels[i] = imgPalette[ imgData[x][y][0] ][ 0 ]
-		elif self.imgChannels >= 3:
-			for i in range(pimg.pixels.length):
-				x = i % imgWidth
-				y = i / imgWidth
-				c = getBlend(x,y)
-				pimg.pixels[i] = c
-				print(c)
+	def loadPImage(self, zoom=None):
+		if self.pimg is None:
+			self.pimg = PImage(self.imgWidth, self.imgHeight)
 
-		pimg.updatePixels()
-		return pimg
+		if zoom:
+			self.pimg = PImage(self.imgWidth * zoom, self.imgHeight * zoom)
+
+		#self.pimg.loadPixels()
+		zoom = False
+		if zoom:
+			if self.imgChannels == 1:
+				for y in range(self.imgHeight):
+					for x in range(self.imgWidth):
+						col = imgData[x][y][0]
+						col = constrain(col, 0, imgMax)
+						for z2 in range(zoom):
+							for z1 in range(zoom):
+								loc = (self.imgWidth*zoom) * (y*zoom+z2) + (x*zoom) + z1
+								self.pimg.pixels[ loc ] = imgPalette [ col ][0]
+			elif self.imgChannels == 2: # complex data
+				for y in range(imgHeight):
+					for x in range(self.imgWidth):
+						c1 = imgData[x][y][0]
+						c2 = imgData[x][y][1]
+						colorMode(HSB, 360)
+						c = color( c2 + 180, constrain( 60 + c1, 0, 360 ), constrain( c1, 0, 360 ) )
+						for z2 in range(zoom):
+							for z1 in range(zoom):
+								loc = (self.imgWidth*zoom) * (y*zoom+z2) + (x*zoom) + z1
+								self.pimg.pixels[ loc ] = c
+								#print(c)
+				colorMode(RGB, 255)
+			elif self.imgChannels >= 3:
+				for y in range(self.imgHeight):
+					for x in range(self.imgWidth):
+						col = imgData[x][y][0]
+						col = constrain(col, 0, imgMax)
+						for z2 in range(zoom):
+							for z1 in range(zoom):
+								loc = (self.imgWidth*zoom) * (y*zoom+z2) + (x*zoom) + z1
+								c = getBlend(x,y)
+								self.pimg.pixels[ loc ] = c
+								#print(c)
+		else:
+			pass
+			#if self.imgChannels == 1:
+			#	for i in range(pimg.pixels.length):
+			#		x = i % self.imgWidth
+			#		y = i / self.imgWidth
+			#		self.pimg.pixels[i] = imgPalette[ imgData[x][y][0] ][ 0 ]
+			#elif self.imgChannels >= 3:
+			#	for i in range(self.pimg.pixels.length):
+			#		x = i % self.imgWidth
+			#		y = i / self.imgWidth
+			#		c = getBlend(x,y)
+			#		self.pimg.pixels[i] = c
+			#		print(c)
+
+		self.pimg = self.imgData
+		#self.pimg.updatePixels()
+		return self.pimg
 	
 	def getBlend(x, y):
 		ch0 = constrain(imgData[x][y][0], 0, 255)
@@ -80,46 +123,6 @@ class ImgData:
 		c3 = blendColor(c0, c1, ADD)
 		c4 = blendColor(c2, c3, ADD)
 		return c4
-	
-	def loadPImage(zoom):
-		pimg = PImage(imgWidth * zoom, imgHeight * zoom)
-		#println("PIMG " + (imgWidth) * zoom + "x" + (imgHeight * zoom))
-		pimg.loadPixels()
-		if self.imgChannels == 1:
-			for y in range(imgHeight):
-				for x in range(imgWidth):
-					col = imgData[x][y][0]
-					col = constrain(col, 0, imgMax)
-					for z2 in range(zoom):
-						for z1 in range(zoom):
-							loc = (imgWidth*zoom) * (y*zoom+z2) + (x*zoom) + z1
-							pimg.pixels[ loc ] = imgPalette [ col ][0]
-		elif self.imgChannels == 2: # complex data
-			for y in range(imgHeight):
-				for x in range(imgWidth):
-					c1 = imgData[x][y][0]
-					c2 = imgData[x][y][1]
-					colorMode(HSB, 360)
-					c = color( c2 + 180, constrain( 60 + c1, 0, 360 ), constrain( c1, 0, 360 ) )
-					for z2 in range(zoom):
-						for z1 in range(zoom):
-							loc = (imgWidth*zoom) * (y*zoom+z2) + (x*zoom) + z1
-							pimg.pixels[ loc ] = c
-							#print(c)
-			colorMode(RGB, 255)
-		elif self.imgChannels >= 3:
-			for y in range(imgHeight):
-				for x in range(imgWidth):
-					col = imgData[x][y][0]
-					col = constrain(col, 0, imgMax)
-					for z2 in range(zoom):
-						for z1 in range(zoom):
-							loc = (imgWidth*zoom) * (y*zoom+z2) + (x*zoom) + z1
-							c = getBlend(x,y)
-							pimg.pixels[ loc ] = c
-							#print(c)
-		pimg.updatePixels()
-		return pimg;		
 	
 	# set the display palette for an image based on rgb ? [ -1.0 , 1.0 ]
 	def setPalette(r, g, b) :
@@ -167,9 +170,9 @@ class ImgData:
 		print "\n\n"
 	
 	# getter methods
-	def getHeight(): return imgHeight; 
-	def getWidth() : return imgWidth; 
-	def getPImage(): return pimg; 
+	def getHeight(): return self.imgHeight; 
+	def getWidth() : return self.imgWidth; 
+	def getPImage(): return self.pimg; 
 
 
 
